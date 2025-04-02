@@ -10,7 +10,16 @@ export const metadata: Metadata = {
   title: siteMetadataConfig.blogListTitle,
 };
 
-export default function Blog() {
+// Define props to accept searchParams
+interface BlogPageProps {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}
+
+export default function Blog({ searchParams }: BlogPageProps) {
+  // Get page number from query parameters, default to 1
+  const page = parseInt(searchParams?.page as string || '1', 10);
+  const currentPage = isNaN(page) || page < 1 ? 1 : page;
+
   const allPosts = getAllPosts({ includeContent: false }); // Fetch posts server-side, exclude content
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -18,7 +27,7 @@ export default function Blog() {
         <Header />
         <div className="mt-8 max-w-3xl mx-auto">
           <h1 className="text-3xl font-bold mb-8">Blog Posts</h1>
-          <BlogPostList posts={allPosts} /> {/* Pass posts data */}
+          <BlogPostList posts={allPosts} page={currentPage} /> {/* Pass posts data and current page */}
         </div>
         <Footer />
       </div>
