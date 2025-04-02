@@ -91,8 +91,8 @@ ${longContent}
         expect(posts).toHaveLength(1);
         expect(posts[0].excerpt).toHaveLength(150 + 3); // 150 chars + '...'
         expect(posts[0].excerpt.endsWith('...')).toBe(true);
-        // Read time: ceil(260 / 200) = ceil(1.3) = 2
-        expect(posts[0].readTime).toBe('2 min');
+        // Read time: ceil(84 / 200) = ceil(0.42) = 1
+        expect(posts[0].readTime).toBe('1 min'); // Corrected expectation
     });
 
      it('should handle read errors gracefully', () => {

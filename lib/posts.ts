@@ -29,9 +29,10 @@ export interface PostData {
   content: string;
 }
 
-const postsDirectory = path.join(process.cwd(), 'content/blog');
+// Moved postsDirectory calculation inside getAllPosts
 
 export function getAllPosts(): PostMetadata[] {
+  const postsDirectory = path.join(process.cwd(), 'content/blog'); // Calculate directory path here
   let filenames: string[];
   try {
     filenames = fs.readdirSync(postsDirectory);
@@ -117,6 +118,7 @@ export function getAllPosts(): PostMetadata[] {
 }
 
 export function getPostBySlug(slug: string): PostData | null {
+  const postsDirectory = path.join(process.cwd(), 'content/blog'); // Calculate directory path here too
   const fullPath = path.join(postsDirectory, `${slug}.md`);
   try {
     if (!fs.existsSync(fullPath)) {
