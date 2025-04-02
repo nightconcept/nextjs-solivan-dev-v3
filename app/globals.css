@@ -1,26 +1,181 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Material Design 3 Color System - Light Theme */
+
+    /* Primary */
+    --primary-light: 0 0% 10%;
+    --on-primary-light: 0 0% 100%;
+    --primary-container-light: 0 0% 90%;
+    --on-primary-container-light: 0 0% 10%;
+
+    /* Secondary */
+    --secondary-light: 0 0% 25%;
+    --on-secondary-light: 0 0% 100%;
+    --secondary-container-light: 0 0% 90%;
+    --on-secondary-container-light: 0 0% 10%;
+
+    /* Surface */
+    --surface-light: 0 0% 100%;
+    --on-surface-light: 0 0% 10%;
+    --surface-variant-light: 0 0% 95%;
+    --on-surface-variant-light: 0 0% 30%;
+
+    /* Background */
+    --background-light: 0 0% 98%;
+    --on-background-light: 0 0% 10%;
+
+    /* Error */
+    --error-light: 0 84% 60%;
+    --on-error-light: 0 0% 100%;
+
+    /* Outline */
+    --outline-light: 0 0% 80%;
+
+    /* Material Design 3 Color System - Dark Theme */
+
+    /* Primary */
+    --primary-dark: 0 0% 90%;
+    --on-primary-dark: 0 0% 10%;
+    --primary-container-dark: 0 0% 25%;
+    --on-primary-container-dark: 0 0% 90%;
+
+    /* Secondary */
+    --secondary-dark: 0 0% 80%;
+    --on-secondary-dark: 0 0% 10%;
+    --secondary-container-dark: 0 0% 30%;
+    --on-secondary-container-dark: 0 0% 90%;
+
+    /* Surface */
+    --surface-dark: 0 0% 15%;
+    --on-surface-dark: 0 0% 95%;
+    --surface-variant-dark: 0 0% 20%;
+    --on-surface-variant-dark: 0 0% 80%;
+
+    /* Background */
+    --background-dark: 0 0% 10%;
+    --on-background-dark: 0 0% 95%;
+
+    /* Error */
+    --error-dark: 0 84% 60%;
+    --on-error-dark: 0 0% 100%;
+
+    /* Outline */
+    --outline-dark: 0 0% 40%;
+
+    /* Legacy variables mapped to new system */
+    --background: var(--background-light);
+    --foreground: var(--on-background-light);
+
+    --card: var(--surface-light);
+    --card-foreground: var(--on-surface-light);
+
+    --popover: var(--surface-light);
+    --popover-foreground: var(--on-surface-light);
+
+    --primary: var(--primary-light);
+    --primary-foreground: var(--on-primary-light);
+
+    --secondary: var(--secondary-container-light);
+    --secondary-foreground: var(--on-secondary-container-light);
+
+    --muted: var(--surface-variant-light);
+    --muted-foreground: var(--on-surface-variant-light);
+
+    --accent: var(--secondary-container-light);
+    --accent-foreground: var(--on-secondary-container-light);
+
+    --destructive: var(--error-light);
+    --destructive-foreground: var(--on-error-light);
+
+    --border: var(--outline-light);
+    --input: var(--outline-light);
+    --ring: var(--primary-light);
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Legacy variables mapped to new system */
+    --background: var(--background-dark);
+    --foreground: var(--on-background-dark);
+
+    --card: var(--surface-dark);
+    --card-foreground: var(--on-surface-dark);
+
+    --popover: var(--surface-dark);
+    --popover-foreground: var(--on-surface-dark);
+
+    --primary: var(--primary-dark);
+    --primary-foreground: var(--on-primary-dark);
+
+    --secondary: var(--secondary-container-dark);
+    --secondary-foreground: var(--on-secondary-container-dark);
+
+    --muted: var(--surface-variant-dark);
+    --muted-foreground: var(--on-surface-variant-dark);
+
+    --accent: var(--secondary-container-dark);
+    --accent-foreground: var(--on-secondary-container-dark);
+
+    --destructive: var(--error-dark);
+    --destructive-foreground: var(--on-error-dark);
+
+    --border: var(--outline-dark);
+    --input: var(--outline-dark);
+    --ring: var(--primary-dark);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Add smooth scrolling for anchor links */
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem; /* Add padding for sticky header */
+  }
+
+  /* Monospace font for code */
+  code,
+  pre {
+    font-family: "JetBrains Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-feature-settings: "liga" 1, "calt" 1; /* Enable ligatures */
+  }
 }
+
+/* Custom prose styles for blog content */
+.prose a {
+  @apply text-[#7aa2f7] hover:text-[#7dcfff] underline decoration-[#7aa2f7]/30 hover:decoration-[#7dcfff];
+  transition: color 0.2s, text-decoration-color 0.2s;
+}
+
+.prose h2 {
+  @apply text-2xl font-bold mt-8 mb-4 scroll-mt-20;
+}
+
+.prose p {
+  @apply my-6;
+}
+
+.prose ul {
+  @apply my-6 list-disc pl-6;
+}
+
+.prose li {
+  @apply mb-2;
+}
+
+/* Inline code styling */
+.prose code:not(pre code) {
+  @apply bg-[#1a1b26]/10 dark:bg-[#1a1b26]/30 px-1.5 py-0.5 rounded text-sm font-mono text-[#f7768e] dark:text-[#ff9e64];
+}
+
