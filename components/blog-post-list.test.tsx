@@ -83,7 +83,10 @@ describe('BlogPostList Component', () => {
     expect(screen.getByText(post1.title)).toBeInTheDocument();
     // Check for truncated excerpt (first 150 chars + ...)
     expect(screen.getByText(post1.excerpt)).toBeInTheDocument();
-    expect(screen.getByText(post1.excerpt)).not.toHaveTextContent(post1.content); // Ensure it's not the full content
+    // Ensure content exists before checking it's not present in the excerpt element
+    if (post1.content) {
+      expect(screen.getByText(post1.excerpt)).not.toHaveTextContent(post1.content);
+    }
     expect(screen.getByText(post1.dateObject.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }))).toBeInTheDocument();
     expect(screen.getByText(`${post1.readTime} read`)).toBeInTheDocument();
     expect(screen.getByText(`By ${post1.author}`)).toBeInTheDocument();
@@ -123,7 +126,7 @@ describe('BlogPostList Component', () => {
   it('shows "Next" button when not on the last page', () => {
     render(<BlogPostList posts={mockPosts} postsPerPage={3} page={1} />);
     expect(screen.getByText('Next »')).toBeInTheDocument();
-    expect(screen.getByText('Next »').closest('a')).toHaveAttribute('href', '/blog/page/2');
+    expect(screen.getByText('Next »').closest('a')).toHaveAttribute('href', '/blog?page=2');
   });
 
   it('does not show "Next" button on the last page', () => {
@@ -142,7 +145,7 @@ describe('BlogPostList Component', () => {
    it('shows "Prev" button linking to correct page number for page > 2', () => {
     render(<BlogPostList posts={mockPosts} postsPerPage={3} page={3} />);
     expect(screen.getByText('« Prev')).toBeInTheDocument();
-    expect(screen.getByText('« Prev').closest('a')).toHaveAttribute('href', '/blog/page/2');
+    expect(screen.getByText('« Prev').closest('a')).toHaveAttribute('href', '/blog?page=2');
   });
 
 

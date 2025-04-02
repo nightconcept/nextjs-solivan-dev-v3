@@ -5,7 +5,7 @@ import { getAllPosts, getPostBySlug, PostMetadata } from '@/lib/posts';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import Breadcrumb from '@/components/breadcrumb';
-import { ChevronLeft, ChevronRight, LinkIcon } from 'lucide-react'; // Assuming LinkIcon is used by rehype-autolink-headings implicitly or we add custom component later
+import { LinkIcon } from 'lucide-react'; // Assuming LinkIcon is used by rehype-autolink-headings implicitly or we add custom component later
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
@@ -57,9 +57,8 @@ interface BlogPostPageProps {
 
 // The main page component
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  // Await the params promise before accessing its properties
-  const resolvedParams = await params;
-  const { slug } = resolvedParams;
+  // Directly access slug from params
+  const { slug } = params;
   const post = getPostBySlug(slug);
 
   // If the post doesn't exist (e.g., invalid slug), show a 404 page
@@ -173,22 +172,28 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             )}
 
             {/* Navigation Section */}
-            <div className={`flex justify-between mt-8 ${(!post.frontmatter.tags || post.frontmatter.tags.length === 0) ? 'pt-6 border-t border-border' : ''}`}>
+            {/* Navigation Section - Updated Styling & Content */}
+            <div className={`flex justify-between items-start mt-8 gap-4 ${(!post.frontmatter.tags || post.frontmatter.tags.length === 0) ? 'pt-6 border-t border-border' : ''}`}>
               {prevPost ? (
                 <Link
                   href={`/blog/${prevPost.slug}`}
-                  className="flex items-center text-muted-foreground hover:text-primary transition-colors"
+                  className="bg-muted hover:bg-muted/80 dark:bg-muted dark:hover:bg-muted/80 text-foreground dark:text-foreground px-4 py-3 rounded-md font-medium transition-colors flex flex-col items-start max-w-[calc(50%-0.5rem)]" // Added styles, flex-col, max-width
                 >
-                  <ChevronLeft className="h-4 w-4 mr-1" />
-                  <span>Previous</span>
+                  <div className="flex items-center text-sm mb-1"> {/* Wrapper for icon and label */}
+                    <span className="mr-1">«</span> {/* Replaced ChevronLeft */}
+                    <span>Previous</span>
+                  </div>
+                  <span className="text-xs text-muted-foreground block w-full break-words"> {/* Title below, allows wrapping */}
+                    {prevPost.title}
+                  </span>
                 </Link>
               ) : (
-                // Link to blog index if no previous post
+                // Link to blog index if no previous post - Updated Styling
                 <Link
                   href="/blog"
-                  className="flex items-center text-muted-foreground hover:text-primary transition-colors"
+                  className="bg-muted hover:bg-muted/80 dark:bg-muted dark:hover:bg-muted/80 text-foreground dark:text-foreground px-6 py-2 rounded-md font-medium transition-colors flex items-center max-w-[calc(50%-0.5rem)]" // Added styles, kept items-center
                 >
-                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  <span className="mr-1">«</span> {/* Replaced ChevronLeft */}
                   <span>All Posts</span>
                 </Link>
               )}
@@ -196,14 +201,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               {nextPost ? (
                 <Link
                   href={`/blog/${nextPost.slug}`}
-                  className="flex items-center text-muted-foreground hover:text-primary transition-colors"
+                  className="bg-muted hover:bg-muted/80 dark:bg-muted dark:hover:bg-muted/80 text-foreground dark:text-foreground px-4 py-3 rounded-md font-medium transition-colors flex flex-col items-end ml-auto max-w-[calc(50%-0.5rem)]" // Added styles, flex-col, items-end, ml-auto, max-width
                 >
-                  <span>Next</span>
-                  <ChevronRight className="h-4 w-4 ml-1" />
+                   <div className="flex items-center text-sm mb-1"> {/* Wrapper for icon and label */}
+                    <span>Next</span>
+                    <span className="ml-1">»</span> {/* Replaced ChevronRight */}
+                  </div>
+                  <span className="text-xs text-muted-foreground block w-full text-right break-words"> {/* Title below, allows wrapping */}
+                    {nextPost.title}
+                  </span>
                 </Link>
               ) : (
-                // Optional: Add a link back to home or blog index if no next post
-                <span /> // Render nothing or a disabled link
+                 // Placeholder to maintain layout if no next post
+                 <div className="max-w-[calc(50%-0.5rem)]"></div> // Takes up space
               )}
             </div>
           </article>

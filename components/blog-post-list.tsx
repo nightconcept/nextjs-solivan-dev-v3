@@ -82,7 +82,7 @@ export default function BlogPostList({ posts, page = 1, postsPerPage = 5, showSe
         <div className="flex justify-between mt-8">
           {page > 1 ? (
             <Link
-              href={page === 2 ? "/blog" : `/blog/page/${page - 1}`}
+              href={page === 2 ? "/blog" : `/blog?page=${page - 1}`}
               className="bg-muted hover:bg-muted/80 dark:bg-muted dark:hover:bg-muted/80 text-foreground dark:text-foreground px-6 py-2 rounded-md font-medium transition-colors"
             >
               « Prev
@@ -93,7 +93,7 @@ export default function BlogPostList({ posts, page = 1, postsPerPage = 5, showSe
 
           {page < totalPages && (
             <Link
-              href={`/blog/page/${page + 1}`}
+              href={`/blog?page=${page + 1}`}
               className="bg-muted hover:bg-muted/80 dark:bg-muted dark:hover:bg-muted/80 text-foreground dark:text-foreground px-6 py-2 rounded-md font-medium transition-colors ml-auto"
             >
               Next »
