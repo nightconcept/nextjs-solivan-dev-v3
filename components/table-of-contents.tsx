@@ -69,7 +69,7 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
                         className="flex items-center text-on-surface dark:text-on-surface-dark hover:text-primary dark:hover:text-primary-dark transition-colors"
                         onClick={() => setIsOpen(false)}
                       >
-                        <ChevronRight className="h-3 w-3 mr-1 flex-shrink-0" />
+                        <ChevronRight className="h-3 w-3 mr-1 shrink-0" />
                         <span className="line-clamp-1">{item.title}</span>
                       </Link>
                     </li>
