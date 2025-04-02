@@ -1,91 +1,56 @@
-# Playwright Smoke Testing Plan
+# Testing Plan for `nextjs-solivan-dev-v3` (Local Development)
 
-## 1. Goal
+**Goal:** Implement a basic testing strategy that verifies page availability and component rendering locally, working around the inability to run Playwright's headless browser in the current environment.
 
-Create a set of basic "smoke tests" using Playwright to verify that the main pages of the Next.js application load correctly without critical errors. This provides a safety net during ongoing development.
+**Strategy:** Combine Component Testing and Basic HTTP Request Checks.
 
-## 2. Key Routes to Test
+**Steps:**
 
--   Homepage: `/`
--   About Page: `/about`
--   Blog Index: `/blog`
--   Blog "More" Page: `/blog/more`
--   Individual Blog Post: `/blog/4` (using sample ID `4`)
--   Tag Page (`/tags/[tag]`): Skipped for now as requested.
+1.  **Install Testing Dependencies:**
+    *   Add necessary packages for component testing: React Testing Library (`@testing-library/react`), Jest (`jest`, `jest-environment-jsdom`, `@types/jest`) or Vitest (`vitest`, `@vitest/ui`), and related configuration helpers (`@testing-library/jest-dom`, `ts-node` if using Jest).
+    *   *(Decision Point: Choose between Jest and Vitest during implementation).*
 
-## 3. Testing Tool
+2.  **Configure Test Runner:**
+    *   Create and configure the chosen test runner (e.g., `jest.config.js` or `vitest.config.ts`).
+    *   Ensure it's set up to handle Next.js specifics (like module aliases, CSS modules if used), TypeScript, and JSX.
 
--   Playwright (`@playwright/test`) - Already installed as a dev dependency.
+3.  **Implement Component Tests:**
+    *   Create test files (e.g., `app/page.test.tsx`, `app/about/page.test.tsx`, etc.) for key page components.
+    *   Use React Testing Library (`render`, `screen`, `expect`) to:
+        *   Render the page component.
+        *   Assert that it renders without throwing errors.
+        *   Assert the presence of critical static elements (e.g., `<h1>`, specific headings like "Recent Posts").
 
-## 4. Test Implementation Strategy
+4.  **Implement HTTP Status Checks:**
+    *   Create a test file (e.g., `tests/status.test.ts`) using the chosen test runner (Jest/Vitest).
+    *   Inside this file, use the native `fetch` API to make requests to the locally running development server (`http://localhost:8080` based on `package.json`).
+    *   Target key page URLs identified in the smoke tests (`/`, `/about`, `/blog`, `/blog/more`, `/blog/[id]`).
+    *   Assert that the `response.ok` property is true or the `response.status` is 200 for each request.
 
--   Create a new directory named `tests` in the project root.
--   Inside `tests`, create a test file named `smoke.spec.ts`.
--   For each key route:
-    -   Write a Playwright test case.
-    -   Navigate to the page's URL.
-    -   Assert that a fundamental element is visible to confirm rendering:
-        -   Homepage (`/`): Assert the `h2` heading "Recent Posts" is visible.
-        -   Other pages (`/about`, `/blog`, `/blog/more`, `/blog/4`): Assert the `body` element is visible.
+5.  **Update `package.json` Scripts:**
+    *   Add new scripts to run these tests easily:
+        *   `"test:component": "jest"` (or `"vitest"`)
+        *   `"test:status": "jest tests/status.test.ts"` (or `"vitest run tests/status.test.ts"`)
+        *   Optionally, a combined script: `"test": "npm run test:component && npm run test:status"`
 
-## 5. Test File (`tests/smoke.spec.ts`) Outline
-
-```typescript
-import { test, expect } from '@playwright/test';
-
-test.describe('Smoke Tests - Page Load Checks', () => {
-  test('Homepage loads and shows recent posts heading', async ({ page }) => {
-    await page.goto('/');
-    // Check for the specific heading identified in app/page.tsx
-    await expect(page.locator('h2:has-text("Recent Posts")')).toBeVisible();
-  });
-
-  test('About page loads', async ({ page }) => {
-    await page.goto('/about');
-    await expect(page.locator('body')).toBeVisible();
-  });
-
-  test('Blog index page loads', async ({ page }) => {
-    await page.goto('/blog');
-    await expect(page.locator('body')).toBeVisible();
-  });
-
-  test('Blog "more" page loads', async ({ page }) => {
-    await page.goto('/blog/more');
-    await expect(page.locator('body')).toBeVisible();
-  });
-
-  test('Individual blog post page (ID: 4) loads', async ({ page }) => {
-    await page.goto('/blog/4'); // Using the provided sample ID
-    await expect(page.locator('body')).toBeVisible();
-  });
-
-  // Skipping tag page test as requested
-  // test('Tag page loads', async ({ page }) => { ... });
-});
-```
-
-## 6. Configuration (Optional but Recommended)
-
--   Consider adding a `playwright.config.ts` file if more specific configurations (like base URL) are needed later. For now, the defaults should work.
--   Add a script to `package.json` to easily run the tests, e.g., `"test:e2e": "playwright test"`.
-
-## 7. Plan Diagram
+**Visualization:**
 
 ```mermaid
 graph TD
-    A[Start: Add Smoke Tests] --> B{Identify Key Routes};
-    B --> C[/, /about, /blog, /blog/more, /blog/4];
-    C --> D{Choose Tool};
-    D --> E[Playwright];
-    E --> F{Define Test Strategy};
-    F --> G[Create tests/smoke.spec.ts];
-    G --> H[Test Each Route: Navigate & Assert];
-    H --> I{Assertions};
-    I --> J[Homepage: h2 'Recent Posts' visible];
-    I --> K[Other Pages: body visible];
-    J --> L[Finalize Test Code];
-    K --> L;
-    L --> M{Optional Config};
-    M --> N[Add package.json script];
-    N --> O[End: Plan Complete];
+    A[Start: Need Basic Tests] --> B{Playwright Blocked};
+    B --> C[Strategy: Component Tests (RTL + Jest/Vitest)];
+    B --> D[Strategy: HTTP Status Checks (fetch)];
+
+    C --> F[Test: Render Page Components];
+    F --> F1[Assert: No Errors];
+    F --> F2[Assert: Key Static Elements Present];
+
+    D --> G[Test: Fetch Key Page URLs];
+    G --> G1[Assert: HTTP Status 200 OK];
+
+    H[Implementation Plan] --> I[1. Install Dependencies (RTL, Jest/Vitest)];
+    I --> J[2. Configure Test Runner (jest.config/vitest.config)];
+    J --> K[3. Write Component Tests (*.test.tsx)];
+    J --> L[4. Write HTTP Status Tests (status.test.ts)];
+    K & L --> M[5. Update package.json Scripts];
+    M --> N[Result: Local Testing Suite];
