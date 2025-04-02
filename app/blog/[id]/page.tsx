@@ -9,10 +9,13 @@ import Link from "next/link"
 import { ChevronLeft, ChevronRight, LinkIcon } from "lucide-react"
 import CodeBlock from "@/components/code-block"
 import { Accordion, AccordionItem } from "@/components/accordion"
+import React, { useMemo, use } from "react";
 
-export default function BlogPost({ params }: { params: { id: string } }) {
-  const postId = Number.parseInt(params.id)
-  const post = blogPosts.find((post) => post.id === postId)
+
+export default function BlogPost(props: { params: Promise<{ id: string }> }) {
+  const params = use(props.params);
+  const postId = useMemo(() => Number.parseInt(params.id), [params.id]);
+  const post = useMemo(() => blogPosts.find((p) => p.id === postId), [postId]);
 
   // Find previous and next posts
   const currentIndex = blogPosts.findIndex((post) => post.id === postId)
@@ -343,6 +346,6 @@ export const Counter: React.FC<CounterProps> = ({
         <Footer />
       </div>
     </main>
-  )
+  );
 }
 

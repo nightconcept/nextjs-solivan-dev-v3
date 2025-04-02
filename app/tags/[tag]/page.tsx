@@ -4,7 +4,8 @@ import Breadcrumb from "@/components/breadcrumb"
 import { blogPosts } from "@/components/blog-post-list"
 import Link from "next/link"
 
-export default function TagPage({ params }: { params: { tag: string } }) {
+export default async function TagPage(props: { params: Promise<{ tag: string }> }) {
+  const params = await props.params;
   const tag = params.tag.replace(/-/g, " ")
   const formattedTag = tag
     .split(" ")
