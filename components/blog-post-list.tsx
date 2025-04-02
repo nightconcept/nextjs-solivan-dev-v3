@@ -3,69 +3,38 @@
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { PostMetadata } from "@/lib/posts" // Only import the type
 import { ChevronRight } from "lucide-react"
 
-// Mock data for blog posts
-const blogPosts = [
-  {
-    id: 1,
-    title: "Getting Started with JAMStack",
-    excerpt:
-      "JAMStack is a modern web development architecture based on client-side JavaScript, reusable APIs, and prebuilt Markup. In this post, we'll explore how to get started with JAMStack and why it might be the right choice for your next project.",
-    date: "November 15, 2023",
-    readTime: "5 min",
-    author: "Danny",
-    tags: ["JAMStack", "Web Development", "JavaScript"],
-  },
-  {
-    id: 2,
-    title: "The Power of Stoicism in Software Engineering",
-    excerpt:
-      "Stoicism, an ancient Greek philosophy, has surprising applications in modern software engineering. Learn how principles like focusing on what you can control and embracing challenges can make you a better developer.",
-    date: "November 1, 2023",
-    readTime: "7 min",
-    author: "Danny",
-    tags: ["Philosophy", "Software Engineering", "Productivity"],
-  },
-  {
-    id: 3,
-    title: "Building a Personal Blog with Next.js",
-    excerpt:
-      "Next.js is a powerful React framework that makes building static and server-rendered applications a breeze. In this tutorial, I'll walk through how I built this very blog using Next.js, Tailwind CSS, and more.",
-    date: "October 20, 2023",
-    readTime: "10 min",
-    author: "Danny",
-    tags: ["Next.js", "React", "Tailwind CSS", "Tutorial"],
-  },
-  {
-    id: 4,
-    title: "Advanced Code Formatting and UI Components",
-    excerpt:
-      "Learn how to implement beautiful code blocks with syntax highlighting, create interactive accordions, and style inline code. This post demonstrates various UI components and formatting techniques for technical blogs.",
-    date: "October 5, 2023",
-    readTime: "8 min",
-    author: "Danny",
-    tags: ["UI Design", "Code Formatting", "Web Development", "Accessibility"],
-  },
-]
+// Define props interface
+interface BlogPostListProps {
+  posts: PostMetadata[]; // Add posts prop
+  page?: number;
+  postsPerPage?: number;
+  showSeeMore?: boolean;
+}
 
-export default function BlogPostList({ page = 1, postsPerPage = 3, showSeeMore = false }) {
+// Removed top-level getAllPosts() call
+
+export default function BlogPostList({ posts, page = 1, postsPerPage = 5, showSeeMore = false }: BlogPostListProps) { // Accept posts prop
   const router = useRouter()
-  const [clickedPostId, setClickedPostId] = useState<number | null>(null)
+  const [clickedPostSlug, setClickedPostSlug] = useState<string | null>(null) // Use slug (string) instead of id (number)
 
-  // Calculate pagination
-  const totalPosts = blogPosts.length
+  // Calculate pagination based on the posts prop
+  const totalPosts = posts.length
   const totalPages = Math.ceil(totalPosts / postsPerPage)
   const startIndex = (page - 1) * postsPerPage
   const endIndex = startIndex + postsPerPage
-  const currentPosts = blogPosts.slice(startIndex, endIndex)
-  const hasMorePosts = totalPosts > postsPerPage
+  const currentPosts = posts.slice(startIndex, endIndex)
+  const hasMorePosts = totalPosts > postsPerPage && currentPosts.length > 0 // Check if there are actually posts to show more of
 
-  const handlePostClick = (postId: number) => {
-    setClickedPostId(postId)
+  const handlePostClick = (slug: string) => {
+    console.log("Clicked post with slug:", slug); // Add console log
+    setClickedPostSlug(slug)
+    // Navigate after a short delay for visual feedback
     setTimeout(() => {
-      router.push(`/blog/${postId}`)
-    }, 300) // Small delay for the zoom effect
+      router.push(`/blog/${slug}`) // Use slug in the URL
+    }, 300)
   }
 
   return (
@@ -73,22 +42,27 @@ export default function BlogPostList({ page = 1, postsPerPage = 3, showSeeMore =
       <div className="space-y-8">
         {currentPosts.map((post) => (
           <article
-            key={post.id}
+            key={post.slug} // Use slug as the key
             className={`bg-card dark:bg-card rounded-lg shadow-md p-6 cursor-pointer transition-transform duration-300 ${
-              clickedPostId === post.id ? "scale-[0.98]" : ""
+              clickedPostSlug === post.slug ? "scale-[0.98]" : "" // Compare with clickedPostSlug
             }`}
-            onClick={() => handlePostClick(post.id)}
+            onClick={() => handlePostClick(post.slug)} // Pass slug to handler
           >
             <h3 className="text-xl font-bold mb-2 hover:text-primary/80 dark:hover:text-primary/80 transition-colors">
               {post.title}
             </h3>
             <p className="text-card-foreground dark:text-card-foreground mb-4">{post.excerpt}</p>
             <div className="flex items-center text-sm text-muted-foreground dark:text-muted-foreground">
-              <span>{post.date}</span>
+              {/* Format dateObject for display */}
+              <span>{post.dateObject.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
               <span className="mx-2">•</span>
               <span>{post.readTime} read</span>
-              <span className="mx-2">•</span>
-              <span>By {post.author}</span>
+              {post.author && ( // Conditionally render author if available
+                <>
+                  <span className="mx-2">•</span>
+                  <span>By {Array.isArray(post.author) ? post.author.join(', ') : post.author}</span>
+                </>
+              )}
             </div>
           </article>
         ))}
@@ -131,6 +105,4 @@ export default function BlogPostList({ page = 1, postsPerPage = 3, showSeeMore =
   )
 }
 
-// Export blog posts data for use in other components
-export { blogPosts }
-
+// Removed export { blogPosts } as mock data is no longer used

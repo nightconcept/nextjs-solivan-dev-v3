@@ -17,6 +17,9 @@ interface PostFrontmatter {
 export interface PostMetadata extends PostFrontmatter {
   slug: string;
   dateObject: Date; // Add a Date object for reliable sorting
+  excerpt: string; // Add excerpt field
+  readTime: string; // Add read time field
+  content: string; // Add content field for excerpt generation
 }
 
 // Define the structure of the full post data returned by getPostBySlug
@@ -70,15 +73,41 @@ export function getAllPosts(): PostMetadata[] {
             return null;
         }
 
-        // Combine the data with the slug
+        // --- Excerpt Generation ---
+        // Remove markdown formatting for a cleaner excerpt
+        const plainContent = content
+            .replace(/---[\s\S]*?---/, '') // Remove frontmatter if somehow included
+            .replace(/<\/?[^>]+(>|$)/g, "") // Remove HTML tags
+            .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1') // Remove markdown links, keep text
+            .replace(/[`\*_#]+/g, '') // Remove markdown syntax characters
+            .replace(/\s+/g, ' ') // Normalize whitespace
+            .trim();
+        const excerpt = plainContent.length > 150
+            ? plainContent.substring(0, 150) + '...'
+            : plainContent;
+
+        // --- Read Time Calculation (Simple) ---
+        const wordsPerMinute = 200; // Average reading speed
+        const wordCount = plainContent.split(/\s+/).length;
+        const readTimeMinutes = Math.ceil(wordCount / wordsPerMinute);
+        const readTime = `${readTimeMinutes} min`;
+
+
+        // Combine the data with the slug, excerpt, and readTime
+        // Destructure slug from frontmatter data, collect the rest
+        const { slug: _frontmatterSlug, ...restFrontmatter } = data as PostFrontmatter;
+
         return {
-          slug,
+          slug: slug, // Explicitly use the slug derived from the filename
           dateObject, // Use Date object for sorting
-          ...(data as PostFrontmatter), // Type assertion
+          excerpt,
+          readTime,
+          content, // Include content temporarily if needed elsewhere, or remove if only for excerpt/readtime
+          ...restFrontmatter, // Spread the *rest* of the frontmatter properties
         };
       } catch (error) {
-          console.error(`Error parsing frontmatter for ${filename}:`, error);
-          return null; // Skip file if frontmatter parsing fails
+          console.error(`Error processing file ${filename}:`, error);
+          return null; // Skip file if processing fails
       }
     })
     .filter((post): post is PostMetadata => post !== null); // Filter out null values from errors/skips
