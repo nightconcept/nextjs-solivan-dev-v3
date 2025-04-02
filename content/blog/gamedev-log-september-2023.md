@@ -3,8 +3,6 @@ title: Gamedev Log September 2023
 date: 2023-09-26
 readTime: 2
 updated:
-tags:
-type: blog
 status: published
 author: ["Danny"]
 categories: 

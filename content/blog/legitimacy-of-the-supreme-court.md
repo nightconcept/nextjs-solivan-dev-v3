@@ -2,8 +2,6 @@
 title: Legitimacy of the Supreme Court
 date: 2022-03-25
 updated:
-tags:
-type: blog
 status: published
 author: ["Danny"]
 categories: 

@@ -3,8 +3,6 @@ title: Video Encoding for People in a Hurry
 date: 2023-04-25
 updated:
 ogpublished:
-tags:
-type: guide
 status: draft
 author: ["Danny"]
 categories: 

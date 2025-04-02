@@ -4,8 +4,6 @@ date: 2022-04-09
 updated: 2024-11-06
 lastmod: 2024-03-14
 ogpublished: 2022-04-09
-tags:
-type: misc
 status: published
 author: ["Danny"]
 categories: 

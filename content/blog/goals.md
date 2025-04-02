@@ -3,8 +3,6 @@ title: Goals
 date: 2021-12-01
 readTime: 2
 updated:
-tags:
-type: blog
 status: published
 author: ["Danny"]
 categories: 

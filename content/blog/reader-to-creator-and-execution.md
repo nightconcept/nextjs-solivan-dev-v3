@@ -2,8 +2,6 @@
 title: Reader to Creator and Execution
 date: 2022-03-18
 updated:
-tags:
-type: blog
 status: published
 author: ["Danny"]
 categories: 

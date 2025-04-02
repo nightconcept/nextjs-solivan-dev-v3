@@ -2,8 +2,6 @@
 title: Amateur Research
 date: 2021-12-10
 updated:
-tags:
-type: blog
 status: published
 author: ["Danny"]
 categories: 

@@ -7,7 +7,7 @@ const pathsToTest = [
   '/about',
   '/blog',
   '/blog/more',
-  '/blog/4', // Example dynamic blog post route
+  '/blog/a-new-path', // Test a valid slug-based route
 ];
 
 describe('HTTP Status Checks (requires dev server running)', () => {

@@ -3,8 +3,6 @@ title: Gamedev Log October 2023
 date: 2023-10-01
 readTime: 2
 updated:
-tags:
-type: blog
 status: published
 author: ["Danny"]
 categories: 
