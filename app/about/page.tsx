@@ -1,6 +1,13 @@
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import Breadcrumb from '@/components/breadcrumb';
+import { Metadata } from 'next'; // Added for metadata
+import { siteMetadataConfig } from '@/lib/metadata.config'; // Import the config
+
+// Set static metadata for the About page
+export const metadata: Metadata = {
+  title: siteMetadataConfig.aboutPageTitle,
+};
 
 export default function About() {
   return (

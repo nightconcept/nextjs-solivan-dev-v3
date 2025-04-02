@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { Metadata, ResolvingMetadata } from 'next'; // Added for metadata
 import { getAllPosts, getPostBySlug, PostMetadata } from '@/lib/posts';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
@@ -10,6 +11,34 @@ import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { format } from 'date-fns'; // Using date-fns for formatting
+
+// Define Props type for generateMetadata
+type Props = {
+  params: { slug: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+// Generate metadata for the page
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata // Optional: Access parent metadata
+): Promise<Metadata> {
+  const slug = params.slug;
+  const post = getPostBySlug(slug); // Fetch post data
+
+  if (!post) {
+    // Optionally handle not found case for metadata, though page itself handles 404
+    return {
+      title: 'Post Not Found',
+    };
+  }
+
+  // Return metadata object
+  return {
+    title: post.frontmatter.title,
+    // You could add description: post.excerpt here too
+  };
+}
 
 // Generate static paths for all blog posts
 export async function generateStaticParams() {
@@ -104,25 +133,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     [rehypeAutolinkHeadings, { // Add links to headings
                         behavior: 'append', // 'wrap', 'prepend', 'append'
                         properties: { className: ['anchor-link'], ariaHidden: true, tabIndex: -1 },
-                        content: () => [ // Use LinkIcon (or similar) - requires custom component mapping or careful CSS
-                            {
-                                type: 'element',
-                                tagName: 'svg', // Placeholder, ideally map to Lucide icon
-                                properties: {
-                                    className: 'inline-block w-4 h-4 ml-1 text-muted-foreground',
-                                    xmlns: 'http://www.w3.org/2000/svg',
-                                    viewBox: '0 0 24 24',
-                                    fill: 'none',
-                                    stroke: 'currentColor',
-                                    strokeWidth: '2',
-                                    strokeLinecap: 'round',
-                                    strokeLinejoin: 'round',
-                                },
-                                children: [
-                                    { type: 'element', tagName: 'path', properties: { d: 'M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71' } },
-                                    { type: 'element', tagName: 'path', properties: { d: 'M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71' } }
-                                ]
-                            }
+                        content: () => [
+                          // Return a simple span instead of complex SVG object to improve serialization
+                          {
+                            type: 'element',
+                            tagName: 'span',
+                            properties: { className: 'heading-link-icon', 'aria-hidden': 'true' },
+                            children: [] // No children needed for a simple marker
+                          }
                         ]
                     }]
                 ]}

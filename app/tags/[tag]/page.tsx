@@ -4,6 +4,29 @@ import Breadcrumb from "@/components/breadcrumb";
 import { getAllPosts, PostMetadata } from "@/lib/posts"; // Import from lib/posts
 import Link from "next/link";
 import { notFound } from "next/navigation"; // Import notFound if needed
+import { Metadata, ResolvingMetadata } from 'next'; // Added for metadata
+import { siteMetadataConfig } from '@/lib/metadata.config'; // Import the config
+
+// Define Props type for generateMetadata
+type Props = {
+  params: { tag: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+// Generate metadata for the tag page
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata // Optional: Access parent metadata
+): Promise<Metadata> {
+  const tagSlug = params.tag;
+
+  // Use the template function from the config
+  const title = siteMetadataConfig.tagPageTitleTemplate(tagSlug);
+
+  return {
+    title: title,
+  };
+}
 
 export default async function TagPage(props: { params: Promise<{ tag: string }> }) {
   const params = await props.params;

@@ -2,6 +2,13 @@ import Header from "@/components/header";
 import BlogPostList from "@/components/blog-post-list";
 import Footer from "@/components/footer";
 import { getAllPosts } from "@/lib/posts"; // Import the data fetching function
+import { Metadata } from 'next'; // Added for metadata
+import { siteMetadataConfig } from '@/lib/metadata.config'; // Import the config
+
+// Set static metadata for the blog list page
+export const metadata: Metadata = {
+  title: siteMetadataConfig.blogListTitle,
+};
 
 export default function Blog() {
   const allPosts = getAllPosts({ includeContent: false }); // Fetch posts server-side, exclude content
