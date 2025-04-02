@@ -4,7 +4,7 @@ import Footer from "@/components/footer";
 import { getAllPosts } from "@/lib/posts"; // Import the data fetching function
 
 export default function Blog() {
-  const allPosts = getAllPosts(); // Fetch posts server-side
+  const allPosts = getAllPosts({ includeContent: false }); // Fetch posts server-side, exclude content
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="container mx-auto px-4">

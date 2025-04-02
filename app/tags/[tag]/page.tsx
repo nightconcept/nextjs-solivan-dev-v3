@@ -13,7 +13,7 @@ export default async function TagPage(props: { params: Promise<{ tag: string }> 
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ")
 
-  const allPosts = getAllPosts(); // Fetch all posts
+  const allPosts = getAllPosts({ includeContent: false }); // Fetch all posts, exclude content
   const filteredPosts = allPosts.filter((post: PostMetadata) => // Add type annotation
     post.tags?.some((t: string) => t.toLowerCase() === tag.toLowerCase()) // Check if tags exist and add type
   );

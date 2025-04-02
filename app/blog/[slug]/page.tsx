@@ -13,7 +13,7 @@ import { format } from 'date-fns'; // Using date-fns for formatting
 
 // Generate static paths for all blog posts
 export async function generateStaticParams() {
-  const posts = getAllPosts(); // Fetch all posts metadata
+  const posts = getAllPosts({ includeContent: false }); // Fetch posts metadata, exclude content
   return posts.map((post) => ({
     slug: post.slug,
   }));
@@ -40,7 +40,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   // Fetch all posts again to find previous/next links (could be optimized later if needed)
-  const allPosts = getAllPosts();
+  const allPosts = getAllPosts({ includeContent: false }); // Fetch posts for nav, exclude content
   const currentIndex = allPosts.findIndex((p) => p.slug === slug);
 
   const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;

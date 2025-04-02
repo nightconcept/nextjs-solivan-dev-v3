@@ -19,7 +19,7 @@ export interface PostMetadata extends PostFrontmatter {
   dateObject: Date; // Add a Date object for reliable sorting
   excerpt: string; // Add excerpt field
   readTime: string; // Add read time field
-  content: string; // Add content field for excerpt generation
+  content?: string; // Make content optional as it might not be included
 }
 
 // Define the structure of the full post data returned by getPostBySlug
@@ -31,7 +31,8 @@ export interface PostData {
 
 // Moved postsDirectory calculation inside getAllPosts
 
-export function getAllPosts(): PostMetadata[] {
+export function getAllPosts(options?: { includeContent?: boolean }): PostMetadata[] {
+  const includeContent = options?.includeContent ?? true; // Default to including content
   const postsDirectory = path.join(process.cwd(), 'content/blog'); // Calculate directory path here
   let filenames: string[];
   try {
@@ -103,7 +104,7 @@ export function getAllPosts(): PostMetadata[] {
           dateObject, // Use Date object for sorting
           excerpt,
           readTime,
-          content, // Include content temporarily if needed elsewhere, or remove if only for excerpt/readtime
+          ...(includeContent && { content }), // Conditionally include content
           ...restFrontmatter, // Spread the *rest* of the frontmatter properties
         };
       } catch (error) {

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'; // Import afterEach
 import fs from 'fs';
 import path from 'path';
-import { getAllPosts, PostMetadata } from './posts'; // Import the function and type
+import { getAllPosts, getPostBySlug, PostMetadata } from './posts'; // Import functions and type
 
 // Mock the 'fs' module
 vi.mock('fs');
@@ -249,7 +249,123 @@ date: 2024-02-20
         expect(posts[2].title).toBe('Jan Post');
      });
 
+     it('should include content by default', () => {
+        const mockFilename = 'content-test.md';
+        const mockFileContent = `---
+title: Content Test
+date: 2024-01-10
+---
+This is the actual content.`;
+        // Configure fs mocks
+        const mockedFs = vi.mocked(fs);
+        mockedFs.readdirSync.mockReturnValue([mockFilename] as any);
+        mockedFs.readFileSync.mockImplementation((filePath) => {
+            const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
+            if (filePath === expectedPath) return mockFileContent;
+            throw new Error(`Unexpected path requested in readFileSync mock: ${filePath}`);
+        });
+
+        const posts = getAllPosts(); // No options passed
+        expect(posts).toHaveLength(1);
+        expect(posts[0].content).toBe('This is the actual content.');
+     });
+
+     it('should exclude content when includeContent is false', () => {
+        const mockFilename = 'no-content-test.md';
+        const mockFileContent = `---
+title: No Content Test
+date: 2024-01-11
+---
+Content should be excluded.`;
+        // Configure fs mocks
+        const mockedFs = vi.mocked(fs);
+        mockedFs.readdirSync.mockReturnValue([mockFilename] as any);
+        mockedFs.readFileSync.mockImplementation((filePath) => {
+            const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
+            if (filePath === expectedPath) return mockFileContent;
+            throw new Error(`Unexpected path requested in readFileSync mock: ${filePath}`);
+        });
+
+        const posts = getAllPosts({ includeContent: false }); // Option passed
+        expect(posts).toHaveLength(1);
+        expect(posts[0].content).toBeUndefined();
+     });
+
   });
 
-  // Add tests for getPostBySlug if needed
+  describe('getPostBySlug', () => {
+    it('should return post data including content for a valid slug', () => {
+      const slug = 'valid-post';
+      const mockFilename = `${slug}.md`;
+      const mockFileContent = `---
+title: Valid Post Title
+date: 2024-01-12
+tags: [test, slug]
+---
+
+Full content of the valid post.
+`;
+      const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
+
+      // Configure fs mocks
+      const mockedFs = vi.mocked(fs);
+      mockedFs.existsSync.mockImplementation((filePath) => filePath === expectedPath);
+      mockedFs.readFileSync.mockImplementation((filePath) => {
+        if (filePath === expectedPath) {
+          return mockFileContent;
+        }
+        throw new Error(`Unexpected path requested in readFileSync mock: ${filePath}`);
+      });
+
+      const postData = getPostBySlug(slug);
+
+      expect(postData).not.toBeNull();
+      expect(postData?.slug).toBe(slug);
+      expect(postData?.frontmatter.title).toBe('Valid Post Title');
+      expect(postData?.frontmatter.tags).toEqual(['test', 'slug']);
+      expect(postData?.content.trim()).toBe('Full content of the valid post.'); // Trim potential whitespace
+      expect(mockedFs.existsSync).toHaveBeenCalledWith(expectedPath);
+      expect(mockedFs.readFileSync).toHaveBeenCalledWith(expectedPath, 'utf8');
+    });
+
+    it('should return null if the post file does not exist', () => {
+      const slug = 'non-existent-post';
+      const mockFilename = `${slug}.md`;
+      const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
+
+      // Configure fs mocks
+      const mockedFs = vi.mocked(fs);
+      mockedFs.existsSync.mockReturnValue(false); // Simulate file not found
+
+      const postData = getPostBySlug(slug);
+
+      expect(postData).toBeNull();
+      expect(mockedFs.existsSync).toHaveBeenCalledWith(expectedPath);
+      expect(mockedFs.readFileSync).not.toHaveBeenCalled(); // Should not attempt to read
+    });
+
+    it('should return null on file read error', () => {
+        const slug = 'read-error-post';
+        const mockFilename = `${slug}.md`;
+        const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
+
+        // Configure fs mocks
+        const mockedFs = vi.mocked(fs);
+        mockedFs.existsSync.mockReturnValue(true); // File exists
+        mockedFs.readFileSync.mockImplementation((filePath) => {
+            if (filePath === expectedPath) {
+              throw new Error('Simulated read error'); // Throw error on read
+            }
+            throw new Error(`Unexpected path requested in readFileSync mock: ${filePath}`);
+        });
+
+        const postData = getPostBySlug(slug);
+
+        expect(postData).toBeNull();
+        expect(mockedFs.existsSync).toHaveBeenCalledWith(expectedPath);
+        expect(mockedFs.readFileSync).toHaveBeenCalledWith(expectedPath, 'utf8');
+    });
+
+    // Add more tests for getPostBySlug: e.g., handling frontmatter parsing errors
+  });
 });
