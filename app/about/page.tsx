@@ -1,5 +1,13 @@
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import Breadcrumb from '@/components/breadcrumb';
+import { Metadata } from 'next'; // Added for metadata
+import { siteMetadataConfig } from '@/lib/metadata.config'; // Import the config
+
+// Set static metadata for the About page
+export const metadata: Metadata = {
+  title: siteMetadataConfig.aboutPageTitle,
+};
 
 export default function About() {
   return (
@@ -7,6 +15,13 @@ export default function About() {
       <div className="container mx-auto px-4">
         <Header />
         <div className="mt-8 max-w-3xl mx-auto">
+          <Breadcrumb
+            items={[
+              { label: 'Home', href: '/' },
+              { label: 'About', href: '/about' }
+            ]}
+          />
+          <article className="mt-8 relative">
           <h1 className="text-3xl font-bold mb-8">About Me</h1>
           <div className="prose dark:prose-invert max-w-none">
             <p className="text-lg">
@@ -18,6 +33,7 @@ export default function About() {
               connect with me on social media.
             </p>
           </div>
+          </article>
         </div>
         <Footer />
       </div>
