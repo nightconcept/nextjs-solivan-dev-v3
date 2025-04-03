@@ -1,8 +1,7 @@
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import { visit } from 'unist-util-visit';
-// Removed mdast-util-to-string import
-import Slugger from 'github-slugger'; // Correct import for github-slugger
+import Slugger from 'github-slugger';
 import type { Root, Heading, Text } from 'mdast'; // Import types for clarity, added Text
 
 // Define the structure for each TOC item
