@@ -7,6 +7,7 @@ import { PostMetadata } from '@/lib/posts';
 // --- Mock Dependencies ---
 
 // Mock lib/posts
+// Add draft property, make post 2 a draft
 const mockPosts: PostMetadata[] = Array.from({ length: 5 }, (_, i) => ({
   slug: `mock-post-${i + 1}`,
   title: `Mock Post ${i + 1}`,
@@ -15,6 +16,7 @@ const mockPosts: PostMetadata[] = Array.from({ length: 5 }, (_, i) => ({
   excerpt: `Excerpt for mock post ${i + 1}.`,
   readTime: `${i + 2} min`,
   author: 'Mock Author',
+  draft: i === 1, // Mock Post 2 (index 1) is a draft
 }));
 
 // Define the mock inside the factory
