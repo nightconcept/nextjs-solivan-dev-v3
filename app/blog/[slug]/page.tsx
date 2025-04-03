@@ -5,7 +5,9 @@ import { getAllPosts, getPostBySlug, PostMetadata } from '@/lib/posts';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import Breadcrumb from '@/components/breadcrumb';
-import { LinkIcon } from 'lucide-react'; // Assuming LinkIcon is used by rehype-autolink-headings implicitly or we add custom component later
+import TableOfContents from '@/components/table-of-contents'; // Added TOC component
+import { extractHeadings } from '@/lib/toc'; // Added heading extraction utility
+import { Link as LinkIcon } from 'lucide-react'; // Added for potential future icon use, though not directly in rehype content for now
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
@@ -70,6 +72,9 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
     return null; // Explicitly return to prevent further execution, though notFound should handle this
   }
 
+  // Extract headings for TOC
+  const tocItems = await extractHeadings(post.content);
+  // Removed console.log for debugging
   // Fetch all posts again to find previous/next links (could be optimized later if needed)
   const allPosts = getAllPosts({ includeContent: false }); // Fetch posts for nav, exclude content
   const currentIndex = allPosts.findIndex((p) => p.slug === slug);
@@ -114,8 +119,8 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
           />
 
           <article className="mt-8 relative">
-            {/* Table of Contents could be added here later if needed */}
-            {/* Example: <TableOfContents content={post.content} /> */}
+            {/* Add Table of Contents */}
+            <TableOfContents items={tocItems} />
 
             <h1 className="text-3xl md:text-4xl font-bold mb-4">{post.frontmatter.title}</h1>
 
@@ -127,23 +132,25 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
             </div>
 
             {/* Render the markdown content */}
-            <div className="prose dark:prose-invert max-w-none lg:prose-lg prose-headings:scroll-mt-20 prose-a:text-primary hover:prose-a:text-primary/80">
+            {/* Added prose-headings:relative and prose-headings:group for hover effect */}
+            <div className="prose dark:prose-invert max-w-none lg:prose-lg prose-headings:scroll-mt-20 prose-headings:relative prose-headings:group prose-a:text-primary hover:prose-a:text-primary/80">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[
                     rehypeSlug, // Add IDs to headings
                     [rehypeAutolinkHeadings, { // Add links to headings
                         behavior: 'append', // 'wrap', 'prepend', 'append'
-                        properties: { className: ['anchor-link'], ariaHidden: true, tabIndex: -1 },
-                        content: () => [
-                          // Return a simple span instead of complex SVG object to improve serialization
-                          {
-                            type: 'element',
-                            tagName: 'span',
-                            properties: { className: 'heading-link-icon', 'aria-hidden': 'true' },
-                            children: [] // No children needed for a simple marker
-                          }
-                        ]
+                        // Added Tailwind classes for hover effect and basic styling
+                        properties: {
+                            // Restored opacity, removed absolute positioning, added margin-left
+                            // Added text-primary for color
+                            // Removed text-primary to inherit prose link color
+                            className: ['anchor-link', 'ml-2', 'opacity-0', 'group-hover:opacity-100', 'transition-opacity', 'text-primary', 'group-hover:underline'],
+                            ariaHidden: true,
+                            tabIndex: -1
+                        },
+                        // Using '#' symbol for the link content
+                        content: { type: 'text', value: '#' }
                     }]
                 ]}
                 components={{
