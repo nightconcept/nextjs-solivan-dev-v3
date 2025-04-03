@@ -38,7 +38,7 @@ export default async function TagPage(props: { params: Promise<{ tag: string }> 
 
   const allPosts = getAllPosts({ includeContent: false }); // Fetch all posts, exclude content
   const filteredPosts = allPosts.filter((post: PostMetadata) => // Add type annotation
-    post.tags?.some((t: string) => t.toLowerCase() === tag.toLowerCase()) // Check if tags exist and add type
+    post.tags?.some((t: string) => t.toLowerCase() === params.tag.toLowerCase()) // Compare with original param tag
   );
 
   // Optional: Handle case where no posts match the tag
