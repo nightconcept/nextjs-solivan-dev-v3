@@ -1,44 +1,56 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach, beforeAll } from 'vitest';
 import fs from 'fs';
 import path from 'path';
-import { getAllMarkdownPages, getMarkdownPageBySlug } from './content'; // Import functions to test
+// Declare variables to hold imported functions
+let getAllMarkdownPages: typeof import('./content').getAllMarkdownPages;
+let getMarkdownPageBySlug: typeof import('./content').getMarkdownPageBySlug;
 
 // Mock the 'fs' module
 vi.mock('fs');
 
-// Define the mock content directory path
-const MOCK_CONTENT_DIR = '/mock/project/content';
+// Define mock paths *before* any imports that might use them
+const MOCK_CWD = '/mock/project';
+const MOCK_CONTENT_DIR = '/mock/project/content'; // Use literal path for simplicity in mock setup
 
-// Mock the 'path' module to intercept the specific join for contentDirectory
-// We need to do this carefully to avoid infinite loops and keep other joins working.
-const realProcessCwd = process.cwd(); // Capture the real CWD *once* before mocks
+// Mock process.cwd() globally for this test file
+vi.spyOn(process, 'cwd').mockReturnValue(MOCK_CWD);
 
-vi.mock('path', async () => {
- // Move the importActual *inside* the async factory function
- const actual = await vi.importActual<typeof path>('path');
- return {
-   ...actual, // Keep other path functions (like basename) working
-   join: vi.fn((...args: string[]) => {
-     // Check if this is the specific call defining contentDirectory in lib/content.ts
-     // It joins the *real* process.cwd() with 'content'
-     if (args.length === 2 && args[0] === realProcessCwd && args[1] === 'content') {
-       return MOCK_CONTENT_DIR; // Return our mock path for this specific case
-     }
-     // Otherwise, use the actual path.join implementation for all other calls
-     return actual.join(...args);
-   }),
- };
+// Use vi.doMock to ensure 'path' is mocked *before* lib/content is imported
+vi.doMock('path', async () => {
+  const actual = await vi.importActual<typeof path>('path');
+  return {
+    ...actual,
+    join: vi.fn((...args: string[]) => {
+      // Check if this is the specific call defining contentDirectory in lib/content.ts
+      if (args.length === 2 && args[0] === MOCK_CWD && args[1] === 'content') {
+        return MOCK_CONTENT_DIR; // Return our mock path
+      }
+      // Use actual join for other calls
+      return actual.join(...args);
+    }),
+  };
 });
+
+// Removed top-level await import
+
 describe('lib/content', () => {
- // No longer mocking process.cwd()
- beforeEach(() => {
-   vi.resetAllMocks(); // Reset mocks before each test
-   // We might need to reset the path.join mock's call count if needed per test
-   // vi.mocked(path.join).mockClear(); // Uncomment if needed
+  // The original describe block starts here
+ // Import the module before tests run, after mocks are set up
+ beforeAll(async () => {
+   const contentModule = await import('./content');
+   getAllMarkdownPages = contentModule.getAllMarkdownPages;
+   getMarkdownPageBySlug = contentModule.getMarkdownPageBySlug;
  });
 
- // No afterEach needed for process.cwd()
+ // No longer mocking process.cwd() here, it's done globally
+ beforeEach(() => {
+   // Reset mocks before each test, but process.cwd spy and path.join mock persist
+   vi.clearAllMocks(); // Use clearAllMocks instead of reset to keep mock implementations
+ });
 
+ afterEach(() => {
+   vi.restoreAllMocks(); // Restore all mocks, including the process.cwd spy
+ });
   // --- Tests for getAllMarkdownPages ---
   describe('getAllMarkdownPages', () => {
    it('should return slugs for top-level markdown files and filter others', () => {
@@ -129,7 +141,7 @@ description: A test page.
 This is the content of the about page.
 `;
      // Use the mocked constant now
-     const expectedPath = path.join(MOCK_CONTENT_DIR, mockFilename);
+     const expectedPath = `${MOCK_CONTENT_DIR}/${mockFilename}`; // Use simple string concat now
 
      // Configure fs mocks
      const mockedFs = vi.mocked(fs);
@@ -157,7 +169,7 @@ This is the content of the about page.
    it('should return null if the page file does not exist', () => {
      const slug = 'non-existent-page';
      // Use the mocked constant now
-     const expectedPath = path.join(MOCK_CONTENT_DIR, `${slug}.md`);
+     const expectedPath = `${MOCK_CONTENT_DIR}/${slug}.md`;
 
      // Configure fs mocks
      const mockedFs = vi.mocked(fs);
@@ -178,7 +190,7 @@ This is the content of the about page.
    it('should return null on file read error', () => {
      const slug = 'read-error-page';
      // Use the mocked constant now
-     const expectedPath = path.join(MOCK_CONTENT_DIR, `${slug}.md`);
+     const expectedPath = `${MOCK_CONTENT_DIR}/${slug}.md`;
 
      // Configure fs mocks
      const mockedFs = vi.mocked(fs);
@@ -204,6 +216,8 @@ This is the content of the about page.
 
      consoleErrorSpy.mockRestore(); // Restore console.error
     });
+
+   // Rewriting this specific test block to ensure correct syntax
    it('should return null on frontmatter parsing error', () => {
      const slug = 'bad-fm-page';
      const mockFilename = `${slug}.md`;
@@ -216,7 +230,7 @@ invalid_yaml: : :
 Content here.
 `;
      // Use the mocked constant now
-     const expectedPath = path.join(MOCK_CONTENT_DIR, mockFilename);
+     const expectedPath = `${MOCK_CONTENT_DIR}/${mockFilename}`;
 
      // Configure fs mocks
      const mockedFs = vi.mocked(fs);
@@ -228,7 +242,7 @@ Content here.
        }
        console.error(`readFileSync (bad fm test) mock received unexpected path: ${p}, expected: ${expectedPath}`);
        throw new Error(`Unexpected path requested in readFileSync mock: ${p}`);
-     });
+     }); // Correct closing for readFileSync.mockImplementation
 
      // Suppress console.error expected during this test
      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -241,7 +255,9 @@ Content here.
      expect(consoleErrorSpy).toHaveBeenCalled(); // Check if error was logged
 
      consoleErrorSpy.mockRestore(); // Restore console.error
-    });
+   }); // Correct closing for it(...) block
+
     // Note: 'should correctly parse frontmatter and content' is covered by the first test.
-  });
-});
+  }); // End describe('getMarkdownPageBySlug')
+}); // End describe('lib/content')
+// Removed IIFE closing

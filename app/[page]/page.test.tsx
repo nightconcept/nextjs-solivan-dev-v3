@@ -54,23 +54,25 @@ describe('Dynamic Page ([page]/page.tsx)', () => {
       frontmatter: { title: 'Mock About Title', description: 'Mock description' },
       content: 'This is the mock about page content.',
     };
-    mockedGetMarkdownPageBySlug.mockReturnValue(mockPageData);
+    mockedGetMarkdownPageBySlug.mockResolvedValue(mockPageData); // Use mockResolvedValue for async simulation
 
     // Render the component for the 'about' page
     // Provide both params and searchParams
     const props: TestPageProps = { params: { page: 'about' }, searchParams: {} };
     // Render is async for async components
-    await render(<Page {...props as any} />); // Cast props to any to bypass TS error
+    // Resolve the async component before rendering
+    // Render the async component directly using JSX
+    render(<Page {...props as any} />);
 
     // Wait for the heading based on the mocked title to appear
     const heading = await screen.findByRole('heading', { name: /mock about title/i });
     expect(heading).toBeInTheDocument();
 
-    // Check if mock content is present
-    expect(screen.getByText(/this is the mock about page content/i)).toBeInTheDocument();
+    // Check if mock content is present (use findByText for consistency with async nature)
+    expect(await screen.findByText(/this is the mock about page content/i)).toBeInTheDocument();
 
-    // Check if breadcrumb is rendered with correct data
-    expect(screen.getByText(/Mock Breadcrumb: Home > Mock About Title/i)).toBeInTheDocument();
+    // Check if breadcrumb is rendered with correct data (use findByText)
+    expect(await screen.findByText(/Mock Breadcrumb: Home > Mock About Title/i)).toBeInTheDocument();
 
     // Ensure the mock function was called correctly
     expect(mockedGetMarkdownPageBySlug).toHaveBeenCalledWith('about');
@@ -84,7 +86,7 @@ describe('Dynamic Page ([page]/page.tsx)', () => {
     // Use waitFor to handle the async nature and potential state updates before notFound is called
     const props: TestPageProps = { params: { page: 'nonexistent' }, searchParams: {} };
     // Render the component, it might complete even if notFound is called internally
-    await render(<Page {...props as any} />);
+    render(<Page {...props as any} />); // render is sync
 
     // Assert that notFound was called after rendering and async operations
     // Use waitFor to ensure we wait for the possibility of notFound being called asynchronously

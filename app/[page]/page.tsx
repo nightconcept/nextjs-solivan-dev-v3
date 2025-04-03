@@ -63,7 +63,7 @@ export default async function Page(props: Props) {
 
   // Destructure page directly
   // const pageSlug = params.page; // No longer needed
-  const pageData = getMarkdownPageBySlug(pageSlug);
+  const pageData = await getMarkdownPageBySlug(pageSlug); // Await the async function call
 
   // If the page data doesn't exist (e.g., invalid slug), show a 404 page
   if (!pageData) {
