@@ -19,13 +19,15 @@ interface BlogPostListProps {
 export default function BlogPostList({ posts, page = 1, postsPerPage = 5, showSeeMore = false }: BlogPostListProps) { // Accept posts prop
   const router = useRouter()
   const [clickedPostSlug, setClickedPostSlug] = useState<string | null>(null) // Use slug (string) instead of id (number)
+// Filter out draft posts BEFORE pagination/rendering
+const publishedPosts = posts.filter(post => post.draft !== true); // Keep if draft is false or undefined
 
-  // Calculate pagination based on the posts prop
-  const totalPosts = posts.length
-  const totalPages = Math.ceil(totalPosts / postsPerPage)
-  const startIndex = (page - 1) * postsPerPage
-  const endIndex = startIndex + postsPerPage
-  const currentPosts = posts.slice(startIndex, endIndex)
+// Calculate pagination based on the *filtered* posts
+const totalPosts = publishedPosts.length // Use filtered list length
+const totalPages = Math.ceil(totalPosts / postsPerPage)
+const startIndex = (page - 1) * postsPerPage
+const endIndex = startIndex + postsPerPage
+const currentPosts = publishedPosts.slice(startIndex, endIndex) // Slice the filtered list
   const hasMorePosts = totalPosts > postsPerPage && currentPosts.length > 0 // Check if there are actually posts to show more of
 
   const handlePostClick = (slug: string) => {
