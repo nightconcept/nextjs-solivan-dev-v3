@@ -91,8 +91,6 @@ describe('lib/content', () => {
    });
 
     // The previous test already covers ignoring subdirectories and non-markdown files implicitly.
-    // We can add more specific tests if needed, but let's keep the todos for now.
-    it.todo('should ignore files in subdirectories (like blog)'); // Can be refined if needed
    it('should handle directory read errors gracefully', () => {
      // Use the mocked constant now
      const expectedDir = MOCK_CONTENT_DIR;
@@ -122,10 +120,6 @@ describe('lib/content', () => {
    });
     // Parsing/filtering based on frontmatter is NOT done by this function.
     // Note: Frontmatter tests removed as they are not applicable to getAllMarkdownPages
-    it.todo('should handle directory read errors gracefully');
-    it.todo('should parse frontmatter correctly');
-    it.todo('should handle frontmatter parsing errors gracefully');
-    it.todo('should filter out pages with missing required frontmatter (title)');
   });
 
   // --- Tests for getMarkdownPageBySlug ---
@@ -257,7 +251,41 @@ Content here.
      consoleErrorSpy.mockRestore(); // Restore console.error
    }); // Correct closing for it(...) block
 
+   it('should return page data and log warning if title is missing in frontmatter', () => {
+     const slug = 'missing-title-page';
+     const mockFilename = `${slug}.md`;
+     const mockFileContent = `---
+description: A page without a title.
+date: 2024-01-06
+---
+
+Content is still here.
+`;
+     const expectedPath = `${MOCK_CONTENT_DIR}/${mockFilename}`;
+
+     // Configure fs mocks
+     const mockedFs = vi.mocked(fs);
+     mockedFs.existsSync.mockImplementation((p) => p === expectedPath);
+     mockedFs.readFileSync.mockImplementation((p) => {
+       if (p === expectedPath) return mockFileContent;
+       throw new Error(`Unexpected path in readFileSync mock: ${p}`);
+     });
+
+     // Spy on console.warn
+     const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+     const pageData = getMarkdownPageBySlug(slug);
+
+     expect(pageData).not.toBeNull(); // Page should still be returned
+     expect(pageData?.slug).toBe(slug);
+     expect(pageData?.frontmatter.title).toBeUndefined(); // Title is missing
+     expect(pageData?.frontmatter.description).toBe('A page without a title.');
+     expect(pageData?.content.trim()).toBe('Content is still here.');
+     expect(consoleWarnSpy).toHaveBeenCalledWith(`Page ${slug}.md: Missing 'title' in frontmatter.`);
+
+     consoleWarnSpy.mockRestore(); // Restore console.warn
+   });
+
     // Note: 'should correctly parse frontmatter and content' is covered by the first test.
   }); // End describe('getMarkdownPageBySlug')
 }); // End describe('lib/content')
-// Removed IIFE closing
