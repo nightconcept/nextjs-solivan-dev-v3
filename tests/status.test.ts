@@ -6,7 +6,7 @@ const pathsToTest = [
   '/',
   '/about',
   '/blog',
-  '/blog/more',
+  '/blog?page=2',
   '/blog/a-new-path', // Test a valid slug-based route
 ];
 

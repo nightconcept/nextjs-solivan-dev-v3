@@ -10,7 +10,7 @@ description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
 comments: false
-showToc: false # show contents
+# showToc: false # show contents - Removed duplicate key
 TocOpen: true # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
 disableShare: true	# do not show share button
