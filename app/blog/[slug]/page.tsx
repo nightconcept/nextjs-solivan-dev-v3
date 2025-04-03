@@ -14,15 +14,17 @@ import { format } from 'date-fns'; // Using date-fns for formatting
 
 // Define Props type for generateMetadata
 type Props = {
-  params: { slug: string }
-  searchParams: { [key: string]: string | string[] | undefined }
+  params: Promise<{ slug: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 // Generate metadata for the page
 export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata // Optional: Access parent metadata
+  props: Props,
+  // Optional: Access parent metadata
+  parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const params = await props.params;
   const slug = params.slug;
   const post = getPostBySlug(slug); // Fetch post data
 
@@ -50,13 +52,14 @@ export async function generateStaticParams() {
 
 // Define props structure for the page component
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // The main page component
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
+export default async function BlogPostPage(props: BlogPostPageProps) {
+  const params = await props.params;
   // Directly access slug from params
   const { slug } = params;
   const post = getPostBySlug(slug);
@@ -189,13 +192,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 </Link>
               ) : (
                 // Link to blog index if no previous post - Updated Styling
-                <Link
+                (<Link
                   href="/blog"
                   className="bg-muted hover:bg-muted/80 dark:bg-muted dark:hover:bg-muted/80 text-foreground dark:text-foreground px-6 py-2 rounded-md font-medium transition-colors flex items-center max-w-[calc(50%-0.5rem)]" // Added styles, kept items-center
                 >
                   <span className="mr-1">«</span> {/* Replaced ChevronLeft */}
                   <span>All Posts</span>
-                </Link>
+                </Link>)
               )}
 
               {nextPost ? (
@@ -213,7 +216,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 </Link>
               ) : (
                  // Placeholder to maintain layout if no next post
-                 <div className="max-w-[calc(50%-0.5rem)]"></div> // Takes up space
+                 (<div className="max-w-[calc(50%-0.5rem)]"></div>) // Takes up space
               )}
             </div>
           </article>
