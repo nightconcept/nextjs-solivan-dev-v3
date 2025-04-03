@@ -12,10 +12,11 @@ export const metadata: Metadata = {
 
 // Define props to accept searchParams
 interface BlogPageProps {
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default function Blog({ searchParams }: BlogPageProps) {
+export default async function Blog(props: BlogPageProps) {
+  const searchParams = await props.searchParams;
   // Get page number from query parameters, default to 1
   const page = parseInt(searchParams?.page as string || '1', 10);
   const currentPage = isNaN(page) || page < 1 ? 1 : page;

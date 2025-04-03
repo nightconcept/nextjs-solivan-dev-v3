@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { Github, Linkedin } from "lucide-react"
 
 interface SocialLinksProps {
   spacing?: "normal" | "compact"
