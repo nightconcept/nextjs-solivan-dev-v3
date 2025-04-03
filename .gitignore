@@ -28,4 +28,4 @@ next-env.d.ts
 /.direnv/
 .devenv.flake.nix
 
-/playwright-report
+/playwright-report/
