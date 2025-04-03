@@ -2,7 +2,7 @@ import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import { visit } from 'unist-util-visit';
 import Slugger from 'github-slugger';
-import type { Root, Heading, Text } from 'mdast'; // Import types for clarity, added Text
+import type { Root, Heading, Text } from '@types/mdast';
 
 // Define the structure for each TOC item
 export interface TOCItem {
