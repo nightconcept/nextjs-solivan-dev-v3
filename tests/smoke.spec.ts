@@ -18,15 +18,17 @@ test.describe('Smoke Tests - Page Load Checks', () => {
   });
 
   test('Blog "more" page loads', async ({ page }) => {
-    await page.goto('/blog/more');
+    await page.goto('/blog?page=2');
     await expect(page.locator('body')).toBeVisible();
   });
 
-  test('Individual blog post page (ID: 4) loads', async ({ page }) => {
-    await page.goto('/blog/4'); // Using the provided sample ID
+  test('Individual blog post page migrating-to-hugo loads', async ({ page }) => {
+    await page.goto('/blog/migrating-to-hugo'); // Using the provided sample ID
     await expect(page.locator('body')).toBeVisible();
   });
 
-  // Skipping tag page test as requested
-  // test('Tag page loads', async ({ page }) => { ... });
+  test('Tag page (e.g., "nextjs") loads', async ({ page }) => {
+    await page.goto('/blog/tags/nextjs'); // Assuming 'nextjs' is a valid tag
+    await expect(page.locator('body')).toBeVisible();
+  });
 });
