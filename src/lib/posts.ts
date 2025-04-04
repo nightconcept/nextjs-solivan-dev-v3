@@ -33,7 +33,7 @@ export interface PostData {
 
 export function getAllPosts(options?: { includeContent?: boolean }): PostMetadata[] {
 	const includeContent = options?.includeContent ?? true; // Default to including content
-	const postsDirectory = path.join(process.cwd(), 'content/blog'); // Calculate directory path here
+	const postsDirectory = path.join(process.cwd(), 'src/content/blog'); // Calculate directory path here
 	let filenames: string[];
 	try {
 		filenames = fs.readdirSync(postsDirectory);
@@ -117,7 +117,7 @@ export function getAllPosts(options?: { includeContent?: boolean }): PostMetadat
 }
 
 export function getPostBySlug(slug: string): PostData | null {
-	const postsDirectory = path.join(process.cwd(), 'content/blog'); // Calculate directory path here too
+	const postsDirectory = path.join(process.cwd(), 'src/content/blog'); // Calculate directory path here too
 	const fullPath = path.join(postsDirectory, `${slug}.md`);
 	try {
 		if (!fs.existsSync(fullPath)) {

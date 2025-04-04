@@ -27,7 +27,7 @@ export interface PageMetadata {
 	// title?: string;
 }
 
-const contentDirectory = path.join(process.cwd(), 'content');
+const contentDirectory = path.join(process.cwd(), 'src/content');
 
 /**
  * Retrieves the content and frontmatter for a specific top-level markdown page.
