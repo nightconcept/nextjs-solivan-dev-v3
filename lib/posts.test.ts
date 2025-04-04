@@ -43,9 +43,7 @@ Post content here.
 
 			// Configure fs mocks for this specific test
 			const mockedFs = vi.mocked(fs);
-			mockedFs.readdirSync.mockReturnValue([
-				{ name: mockFilename, isFile: () => true }
-			] as fs.Dirent[]); // Return Dirent-like objects
+			mockedFs.readdirSync.mockReturnValue([mockFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
 				// Calculate the path getAllPosts *should* be requesting based on mocked cwd
 				const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
@@ -78,9 +76,7 @@ ${longContent}
 `;
 			// Configure fs mocks
 			const mockedFs = vi.mocked(fs);
-			mockedFs.readdirSync.mockReturnValue([
-				{ name: mockFilename, isFile: () => true }
-			] as fs.Dirent[]); // Return Dirent-like objects
+			mockedFs.readdirSync.mockReturnValue([mockFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
 				const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
 				if (filePath === expectedPath) {
@@ -108,10 +104,7 @@ date: 2024-01-03
 Content`;
 			// Configure fs mocks
 			const mockedFs = vi.mocked(fs);
-			mockedFs.readdirSync.mockReturnValue([
-				{ name: mockFilename, isFile: () => true },
-				{ name: errorFilename, isFile: () => true }
-			] as fs.Dirent[]); // Return Dirent-like objects
+			mockedFs.readdirSync.mockReturnValue([mockFilename, errorFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
 				const expectedReadablePath = path.join(process.cwd(), 'content/blog', mockFilename);
 				const expectedErrorPath = path.join(process.cwd(), 'content/blog', errorFilename);
@@ -148,10 +141,7 @@ invalid_yaml: : :
 Content`;
 			// Configure fs mocks
 			const mockedFs = vi.mocked(fs);
-			mockedFs.readdirSync.mockReturnValue([
-				{ name: mockFilename, isFile: () => true },
-				{ name: errorFilename, isFile: () => true }
-			] as fs.Dirent[]); // Return Dirent-like objects
+			mockedFs.readdirSync.mockReturnValue([mockFilename, errorFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
 				const expectedGoodPath = path.join(process.cwd(), 'content/blog', mockFilename);
 				const expectedErrorPath = path.join(process.cwd(), 'content/blog', errorFilename);
@@ -182,10 +172,7 @@ date: 2024-01-07
 Content`;
 			// Configure fs mocks
 			const mockedFs = vi.mocked(fs);
-			mockedFs.readdirSync.mockReturnValue([
-				{ name: goodFilename, isFile: () => true },
-				{ name: badFilename, isFile: () => true }
-			] as fs.Dirent[]); // Return Dirent-like objects
+			mockedFs.readdirSync.mockReturnValue([goodFilename, badFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
 				const expectedGoodPath = path.join(process.cwd(), 'content/blog', goodFilename);
 				const expectedBadPath = path.join(process.cwd(), 'content/blog', badFilename);
@@ -216,10 +203,7 @@ date: Not A Real Date
 Content`;
 			// Configure fs mocks
 			const mockedFs = vi.mocked(fs);
-			mockedFs.readdirSync.mockReturnValue([
-				{ name: goodFilename, isFile: () => true },
-				{ name: badFilename, isFile: () => true }
-			] as fs.Dirent[]); // Return Dirent-like objects
+			mockedFs.readdirSync.mockReturnValue([goodFilename, badFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
 				const expectedGoodPath = path.join(process.cwd(), 'content/blog', goodFilename);
 				const expectedBadPath = path.join(process.cwd(), 'content/blog', badFilename);
@@ -253,11 +237,7 @@ date: 2024-02-20
 ---`;
 			// Configure fs mocks
 			const mockedFs = vi.mocked(fs);
-			mockedFs.readdirSync.mockReturnValue([
-				{ name: file1, isFile: () => true },
-				{ name: file2, isFile: () => true },
-				{ name: file3, isFile: () => true }
-			] as fs.Dirent[]); // Return Dirent-like objects
+			mockedFs.readdirSync.mockReturnValue([file1, file2, file3] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
 				const expectedPath1 = path.join(process.cwd(), 'content/blog', file1);
 				const expectedPath2 = path.join(process.cwd(), 'content/blog', file2);
@@ -287,9 +267,7 @@ date: 2024-01-10
 This is the actual content.`;
 			// Configure fs mocks
 			const mockedFs = vi.mocked(fs);
-			mockedFs.readdirSync.mockReturnValue([
-				{ name: mockFilename, isFile: () => true }
-			] as fs.Dirent[]); // Return Dirent-like objects
+			mockedFs.readdirSync.mockReturnValue([mockFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
 				const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
 				if (filePath === expectedPath) return mockFileContent;
@@ -310,9 +288,7 @@ date: 2024-01-11
 Content should be excluded.`;
 			// Configure fs mocks
 			const mockedFs = vi.mocked(fs);
-			mockedFs.readdirSync.mockReturnValue([
-				{ name: mockFilename, isFile: () => true }
-			] as fs.Dirent[]); // Return Dirent-like objects
+			mockedFs.readdirSync.mockReturnValue([mockFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
 				const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
 				if (filePath === expectedPath) return mockFileContent;

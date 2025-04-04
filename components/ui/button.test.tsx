@@ -50,7 +50,7 @@ describe('Button Component', () => {
 	it('renders as child element when asChild prop is true', () => {
 		render(
 			<Button asChild variant="link" size="sm">
-				<Link href="/test">Child Link</Link> {/* Use Link component */}
+				<a href="/test">Child Link</a> {/* Use simple anchor instead of Link */}
 			</Button>
 		);
 		// Should render the 'a' tag, not a 'button'

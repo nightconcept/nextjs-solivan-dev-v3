@@ -98,12 +98,12 @@ export function getAllPosts(options?: { includeContent?: boolean }): PostMetadat
 				const frontmatter = data as PostFrontmatter;
 
 				return {
-					slug: slug, // Explicitly use the slug derived from the filename
+					...frontmatter, // Spread the validated frontmatter properties first
+					slug: slug, // Explicitly use the slug derived from the filename (overwrites frontmatter slug if present)
 					dateObject, // Use Date object for sorting
 					excerpt,
 					readTime,
-					...(includeContent && { content }), // Conditionally include content
-					...frontmatter // Spread the validated frontmatter properties
+					...(includeContent && { content }) // Conditionally include content
 				};
 			} catch (error) {
 				console.error(`Error processing file ${filename}:`, error);
