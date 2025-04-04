@@ -29,3 +29,4 @@ next-env.d.ts
 .devenv.flake.nix
 
 /playwright-report/
+/test-results/
