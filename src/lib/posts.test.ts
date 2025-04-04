@@ -46,7 +46,7 @@ Post content here.
 			mockedFs.readdirSync.mockReturnValue([mockFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
 				// Calculate the path getAllPosts *should* be requesting based on mocked cwd
-				const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
+				const expectedPath = path.join(process.cwd(), 'src/content/blog', mockFilename);
 				if (filePath === expectedPath) {
 					return mockFileContent;
 				}
@@ -78,7 +78,7 @@ ${longContent}
 			const mockedFs = vi.mocked(fs);
 			mockedFs.readdirSync.mockReturnValue([mockFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
-				const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
+				const expectedPath = path.join(process.cwd(), 'src/content/blog', mockFilename);
 				if (filePath === expectedPath) {
 					return mockFileContent;
 				}
@@ -106,8 +106,8 @@ Content`;
 			const mockedFs = vi.mocked(fs);
 			mockedFs.readdirSync.mockReturnValue([mockFilename, errorFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
-				const expectedReadablePath = path.join(process.cwd(), 'content/blog', mockFilename);
-				const expectedErrorPath = path.join(process.cwd(), 'content/blog', errorFilename);
+				const expectedReadablePath = path.join(process.cwd(), 'src/content/blog', mockFilename);
+				const expectedErrorPath = path.join(process.cwd(), 'src/content/blog', errorFilename);
 				if (filePath === expectedReadablePath) {
 					return mockFileContent;
 				}
@@ -143,8 +143,8 @@ Content`;
 			const mockedFs = vi.mocked(fs);
 			mockedFs.readdirSync.mockReturnValue([mockFilename, errorFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
-				const expectedGoodPath = path.join(process.cwd(), 'content/blog', mockFilename);
-				const expectedErrorPath = path.join(process.cwd(), 'content/blog', errorFilename);
+				const expectedGoodPath = path.join(process.cwd(), 'src/content/blog', mockFilename);
+				const expectedErrorPath = path.join(process.cwd(), 'src/content/blog', errorFilename);
 				if (filePath === expectedGoodPath) return goodFileContent;
 				if (filePath === expectedErrorPath) return badFileContent; // Return content with bad frontmatter
 				console.error(
@@ -174,8 +174,8 @@ Content`;
 			const mockedFs = vi.mocked(fs);
 			mockedFs.readdirSync.mockReturnValue([goodFilename, badFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
-				const expectedGoodPath = path.join(process.cwd(), 'content/blog', goodFilename);
-				const expectedBadPath = path.join(process.cwd(), 'content/blog', badFilename);
+				const expectedGoodPath = path.join(process.cwd(), 'src/content/blog', goodFilename);
+				const expectedBadPath = path.join(process.cwd(), 'src/content/blog', badFilename);
 				if (filePath === expectedGoodPath) return goodContent;
 				if (filePath === expectedBadPath) return badContent;
 				console.error(
@@ -205,8 +205,8 @@ Content`;
 			const mockedFs = vi.mocked(fs);
 			mockedFs.readdirSync.mockReturnValue([goodFilename, badFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
-				const expectedGoodPath = path.join(process.cwd(), 'content/blog', goodFilename);
-				const expectedBadPath = path.join(process.cwd(), 'content/blog', badFilename);
+				const expectedGoodPath = path.join(process.cwd(), 'src/content/blog', goodFilename);
+				const expectedBadPath = path.join(process.cwd(), 'src/content/blog', badFilename);
 				if (filePath === expectedGoodPath) return goodContent;
 				if (filePath === expectedBadPath) return badContent;
 				console.error(
@@ -239,9 +239,9 @@ date: 2024-02-20
 			const mockedFs = vi.mocked(fs);
 			mockedFs.readdirSync.mockReturnValue([file1, file2, file3] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
-				const expectedPath1 = path.join(process.cwd(), 'content/blog', file1);
-				const expectedPath2 = path.join(process.cwd(), 'content/blog', file2);
-				const expectedPath3 = path.join(process.cwd(), 'content/blog', file3);
+				const expectedPath1 = path.join(process.cwd(), 'src/content/blog', file1);
+				const expectedPath2 = path.join(process.cwd(), 'src/content/blog', file2);
+				const expectedPath3 = path.join(process.cwd(), 'src/content/blog', file3);
 				if (filePath === expectedPath1) return content1;
 				if (filePath === expectedPath2) return content2;
 				if (filePath === expectedPath3) return content3;
@@ -269,7 +269,7 @@ This is the actual content.`;
 			const mockedFs = vi.mocked(fs);
 			mockedFs.readdirSync.mockReturnValue([mockFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
-				const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
+				const expectedPath = path.join(process.cwd(), 'src/content/blog', mockFilename);
 				if (filePath === expectedPath) return mockFileContent;
 				throw new Error(`Unexpected path requested in readFileSync mock: ${filePath}`);
 			});
@@ -290,7 +290,7 @@ Content should be excluded.`;
 			const mockedFs = vi.mocked(fs);
 			mockedFs.readdirSync.mockReturnValue([mockFilename] as any[]); // Cast to satisfy mock type
 			mockedFs.readFileSync.mockImplementation((filePath) => {
-				const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
+				const expectedPath = path.join(process.cwd(), 'src/content/blog', mockFilename);
 				if (filePath === expectedPath) return mockFileContent;
 				throw new Error(`Unexpected path requested in readFileSync mock: ${filePath}`);
 			});
@@ -313,7 +313,7 @@ tags: [test, slug]
 
 Full content of the valid post.
 `;
-			const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
+			const expectedPath = path.join(process.cwd(), 'src/content/blog', mockFilename);
 
 			// Configure fs mocks
 			const mockedFs = vi.mocked(fs);
@@ -339,7 +339,7 @@ Full content of the valid post.
 		it('should return null if the post file does not exist', () => {
 			const slug = 'non-existent-post';
 			const mockFilename = `${slug}.md`;
-			const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
+			const expectedPath = path.join(process.cwd(), 'src/content/blog', mockFilename);
 
 			// Configure fs mocks
 			const mockedFs = vi.mocked(fs);
@@ -355,7 +355,7 @@ Full content of the valid post.
 		it('should return null on file read error', () => {
 			const slug = 'read-error-post';
 			const mockFilename = `${slug}.md`;
-			const expectedPath = path.join(process.cwd(), 'content/blog', mockFilename);
+			const expectedPath = path.join(process.cwd(), 'src/content/blog', mockFilename);
 
 			// Configure fs mocks
 			const mockedFs = vi.mocked(fs);
