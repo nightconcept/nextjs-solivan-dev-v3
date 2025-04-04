@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'; // Import afterEach
 import fs from 'fs';
 import path from 'path';
-import { getAllPosts, getPostBySlug } from './posts'; // Removed unused PostMetadata import
+import { getAllPosts, getPostBySlug } from './posts';
+import process from 'node:process'; // Removed unused PostMetadata import
 
 // Mock the 'fs' module
 vi.mock('fs');

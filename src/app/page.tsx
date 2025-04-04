@@ -16,7 +16,7 @@ export default function Home() {
 					<div className="mt-16">
 						<h2 className="mb-8 text-2xl font-bold">Recent Posts</h2>
 						{/* Display the first 3 posts with a link to see more */}
-						<BlogPostList posts={allPosts} postsPerPage={3} showSeeMore={true} />
+						<BlogPostList posts={allPosts} postsPerPage={3} showSeeMore />
 					</div>
 				</div>
 				<Footer />

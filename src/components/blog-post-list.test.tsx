@@ -135,7 +135,7 @@ describe('BlogPostList Component', () => {
 
 	it('shows "See More" link when showSeeMore is true and there are more published posts than postsPerPage', () => {
 		// 7 published posts, 3 per page. Should show "See More".
-		render(<BlogPostList posts={mockPosts} postsPerPage={3} showSeeMore={true} />);
+		render(<BlogPostList posts={mockPosts} postsPerPage={3} showSeeMore />);
 		expect(screen.getByText('See More')).toBeInTheDocument();
 		expect(screen.getByText('See More').closest('a')).toHaveAttribute('href', '/blog');
 	});
@@ -147,7 +147,7 @@ describe('BlogPostList Component', () => {
 
 	it('does not show "See More" link when showSeeMore is true but not enough published posts', () => {
 		// 7 published posts. postsPerPage = 7. Should not show "See More".
-		render(<BlogPostList posts={mockPosts} postsPerPage={7} showSeeMore={true} />);
+		render(<BlogPostList posts={mockPosts} postsPerPage={7} showSeeMore />);
 		expect(screen.queryByText('See More')).not.toBeInTheDocument();
 	});
 

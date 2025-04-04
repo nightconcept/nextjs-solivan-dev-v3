@@ -1,4 +1,5 @@
 // scripts/new-blog.js
+import process from 'node:process';
 const fs = require('fs');
 const path = require('path');
 const { format } = require('date-fns'); // Use date-fns for formatting

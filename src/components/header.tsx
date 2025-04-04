@@ -37,7 +37,7 @@ export default function Header() {
 				</div>
 
 				<div className="sm:hidden">
-					<button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2">
+					<button type="button" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2">
 						{mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
 					</button>
 				</div>

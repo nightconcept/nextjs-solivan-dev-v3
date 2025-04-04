@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Button } from './button';
-import Link from 'next/link'; // Import next/link
 import '@testing-library/jest-dom';
 
 // Mock cn utility if necessary, but often it's simple enough not to require mocking.

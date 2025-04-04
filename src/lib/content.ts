@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import process from 'node:process';
 // Removed unused notFound import
 
 // Define the structure of the frontmatter we expect for general pages

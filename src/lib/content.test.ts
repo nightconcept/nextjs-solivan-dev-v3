@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach, beforeAll } from 'vitest';
 import fs from 'fs';
 import path from 'path';
+import process from 'node:process';
 // Declare variables to hold imported functions
 let getAllMarkdownPages: typeof import('./content').getAllMarkdownPages;
 let getMarkdownPageBySlug: typeof import('./content').getMarkdownPageBySlug;

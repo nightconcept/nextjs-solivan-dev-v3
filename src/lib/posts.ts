@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import process from 'node:process';
 
 // Define the structure of the frontmatter we expect
 interface PostFrontmatter {

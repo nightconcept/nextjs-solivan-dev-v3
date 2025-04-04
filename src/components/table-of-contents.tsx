@@ -21,14 +21,14 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
 	// Check if there's enough space to show the TOC
 	useEffect(() => {
 		const checkSpace = () => {
-			const windowWidth = window.innerWidth;
+			const windowWidth = globalThis.innerWidth;
 			// Hide TOC on smaller screens to prevent overlap with content
 			setHasSpace(windowWidth > 1024);
 		};
 
 		checkSpace();
-		window.addEventListener('resize', checkSpace);
-		return () => window.removeEventListener('resize', checkSpace);
+		globalThis.addEventListener('resize', checkSpace);
+		return () => globalThis.removeEventListener('resize', checkSpace);
 	}, []);
 
 	if (items.length === 0 || !hasSpace) return null;
@@ -41,6 +41,7 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
 			{/* Removed onMouseEnter and onClick from wrapper */}
 			<div className="relative">
 				<button
+					type="button"
 					className={`bg-surface dark:bg-surface-dark rounded-full p-3 shadow-md transition-shadow hover:shadow-lg ${isOpen ? 'opacity-100' : 'opacity-70'}`}
 					onClick={(e) => {
 						e.stopPropagation(); // Prevent click from bubbling to overlay
