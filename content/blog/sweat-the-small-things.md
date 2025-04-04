@@ -1,15 +1,15 @@
 ---
-title: "Sweat the Small Things"
+title: 'Sweat the Small Things'
 date: 2025-03-19T11:00:52-07:00
 lastmod: 2025-03-19T11:00:52-07:00
-author: ["Danny"]
+author: ['Danny']
 categories:
   - blog
 tags:
   - lessons learned
-description: ""
+description: ''
 weight: # 1 means pin the article, sort articles according to this number
-slug: ""
+slug: ''
 draft: false # draft or not
 comments: true
 showToc: false # show contents
@@ -18,9 +18,9 @@ hidemeta: false # hide information (author, create date, etc.)
 disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-  image: ""
-  caption: ""
-  alt: ""
+  image: ''
+  caption: ''
+  alt: ''
   relative: false
 ---
 

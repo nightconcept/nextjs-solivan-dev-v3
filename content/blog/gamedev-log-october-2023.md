@@ -4,14 +4,14 @@ date: 2023-10-01
 readTime: 2
 updated:
 status: published
-author: ["Danny"]
+author: ['Danny']
 categories:
   - blog
 tags:
   - game-dev
-description: ""
+description: ''
 weight: # 1 means pin the article, sort articles according to this number
-slug: ""
+slug: ''
 draft: false # draft or not
 comments: true
 showToc: false # show contents
@@ -20,9 +20,9 @@ hidemeta: false # hide information (author, create date, etc.)
 disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-  image: ""
-  caption: ""
-  alt: ""
+  image: ''
+  caption: ''
+  alt: ''
   relative: false
 ---
 

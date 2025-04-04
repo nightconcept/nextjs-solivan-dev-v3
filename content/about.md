@@ -1,14 +1,14 @@
 ---
-title: "About"
+title: 'About'
 date: 2022-04-07T00:00:00-08:00
 lastmod: 2022-04-07T00:00:00-08:00
-author: ["Danny"]
+author: ['Danny']
 draft: false
 showToc: false
-summary: "Information about me."
-description: ""
+summary: 'Information about me.'
+description: ''
 weight: # 1 means pin the article, sort articles according to this number
-slug: ""
+slug: ''
 comments: false
 # showToc: false # show contents - Removed duplicate key
 TocOpen: true # open contents automantically
@@ -16,9 +16,9 @@ hidemeta: false # hide information (author, create date, etc.)
 disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-  image: ""
-  caption: ""
-  alt: ""
+  image: ''
+  caption: ''
+  alt: ''
   relative: false
 ---
 

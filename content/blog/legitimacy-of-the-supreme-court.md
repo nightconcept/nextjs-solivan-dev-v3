@@ -3,15 +3,15 @@ title: Legitimacy of the Supreme Court
 date: 2022-03-25
 updated:
 status: published
-author: ["Danny"]
+author: ['Danny']
 categories:
   - blog
 tags:
   - opinion
   - politics
-description: ""
+description: ''
 weight: # 1 means pin the article, sort articles according to this number
-slug: ""
+slug: ''
 draft: false # draft or not
 comments: true
 showToc: false # show contents
@@ -20,9 +20,9 @@ hidemeta: false # hide information (author, create date, etc.)
 disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-  image: ""
-  caption: ""
-  alt: ""
+  image: ''
+  caption: ''
+  alt: ''
   relative: false
 ---
 
