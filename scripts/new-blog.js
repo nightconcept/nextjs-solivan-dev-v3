@@ -52,8 +52,6 @@ if (inputArg.endsWith('.md')) {
 		console.error(`Error: Invalid filename or slug derived from filename: "${inputArg}"`);
 		process.exit(1);
 	}
-	console.log(`Input is a filename: "${filename}"`);
-	console.log(`Derived slug: "${slug}"`);
 	// Title will remain empty, using the template default
 } else {
 	// Input is treated as a title
@@ -68,8 +66,6 @@ if (inputArg.endsWith('.md')) {
 		process.exit(1);
 	}
 	filename = `${slug}.md`;
-	console.log(`Input is a title: "${title}"`);
-	console.log(`Generated slug: "${slug}"`);
 	console.log(`Generated filename: "${filename}"`);
 }
 
@@ -80,7 +76,6 @@ const templatePath = path.join('src', 'templates', 'blog.md');
 // 1. Ensure target directory exists
 try {
 	fs.mkdirSync(targetDir, { recursive: true });
-	console.log(`Directory ${targetDir} ensured.`);
 } catch (err) {
 	console.error(`Error creating directory ${targetDir}:`, err);
 	process.exit(1);
@@ -96,7 +91,6 @@ if (fs.existsSync(targetPath)) {
 let templateContent;
 try {
 	templateContent = fs.readFileSync(templatePath, 'utf8');
-	console.log(`Template ${templatePath} read successfully.`);
 } catch (err) {
 	console.error(`Error reading template file ${templatePath}:`, err);
 	process.exit(1);

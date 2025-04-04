@@ -88,8 +88,8 @@ All in all, I want to take these next four years as a chance to grow and do some
 		vi.mocked(getAllPosts).mockReturnValue(mockAllPosts);
 
 		// Render the component - It's an async Server Component, so we await the promise it returns
-		// Wrap params in Promise.resolve to match async component props
-		const PagePromise = BlogPostPage({ params: Promise.resolve({ slug }) });
+		// Pass params directly as the component expects the object, not a promise
+		const PagePromise = BlogPostPage({ params: { slug } });
 		render(await PagePromise); // Removed unused container destructuring
 
 		// Wait for potential async operations within the component if necessary
@@ -136,10 +136,8 @@ All in all, I want to take these next four years as a chance to grow and do some
 		vi.mocked(getAllPosts).mockReturnValue([]); // Return empty array for this case
 
 		// Render the component and expect the mocked notFound to throw
-		// Wrap params in Promise.resolve here as well
-		await expect(BlogPostPage({ params: Promise.resolve({ slug }) })).rejects.toThrow(
-			'Mocked notFound called'
-		);
+		// Pass params directly here as well
+		await expect(BlogPostPage({ params: { slug } })).rejects.toThrow('Mocked notFound called');
 
 		// Verify notFound was indeed called (implicitly checked by the rejection)
 	});

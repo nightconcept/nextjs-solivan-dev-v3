@@ -1,8 +1,10 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest'; // Added vi and beforeEach
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Home from './page';
-import { PostMetadata } from '@/lib/posts'; // Import type for mock data
-// Mock child components to isolate the Home component test
+import { PostMetadata } from '@/lib/posts';
+
+// Mock child components to isolate the Home component during testing.
+// This prevents testing the implementation details of child components.
 vi.mock('@/components/header', () => ({
 	default: () => <div>Mock Header</div>
 }));
@@ -16,12 +18,12 @@ vi.mock('@/components/footer', () => ({
 	default: () => <div>Mock Footer</div>
 }));
 
-// Mock the getAllPosts function from lib/posts
+// Mock the data fetching function to provide controlled data for tests.
 vi.mock('@/lib/posts', () => ({
 	getAllPosts: vi.fn()
 }));
 
-// Helper to create mock post data
+// Factory function to generate consistent mock post metadata for testing.
 const createMockPost = (id: number, date: string): PostMetadata => ({
 	slug: `post-${id}`,
 	title: `Test Post ${id}`,
@@ -34,24 +36,26 @@ const createMockPost = (id: number, date: string): PostMetadata => ({
 	content: `Full content for post ${id}`
 });
 
-// Create mock data to be returned by getAllPosts
+// Generate a list of mock posts to be used in tests.
 const mockPosts: PostMetadata[] = Array.from({ length: 5 }, (_, i) =>
 	createMockPost(i + 1, `2024-01-${10 - i}`)
 );
 
 describe('Home Page', () => {
+	// Before each test, reset mocks and set up the mock return value for getAllPosts.
+	// Using async/await because dynamic import() returns a promise.
 	beforeEach(async () => {
-		// Make beforeEach async
-		// Reset mocks and provide mock data before each test
-		vi.resetAllMocks();
-		// Provide the mock data for getAllPosts using dynamic import
-		const postsModule = await import('@/lib/posts'); // Use await import
-		vi.mocked(postsModule.getAllPosts).mockReturnValue([...mockPosts]); // Use the defined mockPosts
+		vi.resetAllMocks(); // Ensure mocks are clean between tests.
+		// Dynamically import the mocked module to configure its behavior.
+		const postsModule = await import('@/lib/posts');
+		// Set the mock implementation to return our predefined mock data.
+		vi.mocked(postsModule.getAllPosts).mockReturnValue([...mockPosts]);
 	});
 
 	it('renders without crashing', () => {
 		render(<Home />);
-		// No assertion needed here, the test passes if render doesn't throw
+		// This test primarily checks if the component renders without throwing errors.
+		// Implicitly verifies that data fetching and component structure are functional at a basic level.
 	});
 
 	it('renders the "Recent Posts" heading', () => {

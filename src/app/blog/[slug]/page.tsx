@@ -1,107 +1,121 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { Metadata } from 'next'; // Removed unused ResolvingMetadata
-import { getAllPosts, getPostBySlug } from '@/lib/posts'; // Removed unused PostMetadata import
+import { Metadata } from 'next';
+import { getAllPosts, getPostBySlug } from '@/lib/posts';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import Breadcrumb from '@/components/breadcrumb';
-import TableOfContents from '@/components/table-of-contents'; // Added TOC component
-import { extractHeadings } from '@/lib/toc'; // Added heading extraction utility
-// Removed unused LinkIcon import
+import TableOfContents from '@/components/table-of-contents';
+import { extractHeadings } from '@/lib/toc';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import { format } from 'date-fns'; // Using date-fns for formatting
+import { format, isValid, parseISO } from 'date-fns'; // Using date-fns for formatting and validation
 
-// Define Props type for generateMetadata
-type Props = {
-	params: Promise<{ slug: string }>;
-	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+// Type definition for props passed to generateMetadata by Next.js
+type MetadataProps = {
+	params: { slug: string };
+	// searchParams are available but not used here
+	// searchParams: { [key: string]: string | string[] | undefined };
 };
 
-// Generate metadata for the page
-export async function generateMetadata(
-	props: Props
-	// Optional: Access parent metadata
-	// parent: ResolvingMetadata // Removed unused parent parameter
-): Promise<Metadata> {
-	const params = await props.params;
-	const slug = params.slug;
-	const post = getPostBySlug(slug); // Fetch post data
+/**
+ * Generates metadata for the blog post page (title, etc.).
+ * Executed at build time or request time.
+ * @param props Props containing route parameters (slug).
+ * @returns Metadata object for the page.
+ */
+export async function generateMetadata({ params }: MetadataProps): Promise<Metadata> {
+	const { slug } = params;
+	const post = getPostBySlug(slug);
 
 	if (!post) {
-		// Optionally handle not found case for metadata, though page itself handles 404
+		// Post not found, return basic metadata. The page component will handle the 404 rendering.
 		return {
 			title: 'Post Not Found'
 		};
 	}
 
-	// Return metadata object
+	// Return metadata with the post's title.
+	// Consider adding description: post.frontmatter.description or an excerpt here.
 	return {
 		title: post.frontmatter.title
-		// You could add description: post.excerpt here too
 	};
 }
 
-// Generate static paths for all blog posts
+/**
+ * Generates static paths for all blog posts at build time.
+ * This tells Next.js which slugs to pre-render.
+ * @returns An array of objects, each containing a slug parameter.
+ */
 export async function generateStaticParams() {
-	const posts = getAllPosts({ includeContent: false }); // Fetch posts metadata, exclude content
+	// Fetch only slugs and necessary frontmatter, exclude full content for performance.
+	const posts = getAllPosts({ includeContent: false });
 	return posts.map((post) => ({
 		slug: post.slug
 	}));
 }
 
-// Define props structure for the page component
+// Type definition for props passed to the page component by Next.js
 interface BlogPostPageProps {
-	params: Promise<{
+	params: {
 		slug: string;
-	}>;
+	};
 }
 
-// The main page component
-export default async function BlogPostPage(props: BlogPostPageProps) {
-	const params = await props.params;
-	// Directly access slug from params
+/**
+ * Renders a single blog post page.
+ * This is an async Server Component.
+ * @param props Props containing route parameters (slug).
+ * @returns JSX for the blog post page.
+ */
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
 	const { slug } = params;
 	const post = getPostBySlug(slug);
 
-	// If the post doesn't exist (e.g., invalid slug), show a 404 page
+	// If the post lookup returns null (invalid slug), trigger the Next.js 404 page.
 	if (!post) {
 		notFound();
-		return null; // Explicitly return to prevent further execution, though notFound should handle this
+		// Note: notFound() throws an error, so execution stops here.
+		// The 'return null' is technically unreachable but satisfies TypeScript.
+		return null;
 	}
 
-	// Extract headings for TOC
+	// Extract headings from the markdown content to build the Table of Contents.
 	const tocItems = await extractHeadings(post.content);
-	// Removed console.log for debugging
-	// Fetch all posts again to find previous/next links (could be optimized later if needed)
-	const allPosts = getAllPosts({ includeContent: false }); // Fetch posts for nav, exclude content
+
+	// Fetch metadata for all posts to determine the previous and next posts for navigation.
+	// Optimization note: This fetches all posts on every page load. Could be cached or pre-calculated if performance becomes an issue.
+	const allPosts = getAllPosts({ includeContent: false });
 	const currentIndex = allPosts.findIndex((p) => p.slug === slug);
 
 	const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
 	const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
 
-	// Format date for display
-	let formattedDate = '';
-	try {
-		// Ensure date is valid before formatting
-		const dateObject = new Date(post.frontmatter.date);
-		if (!isNaN(dateObject.getTime())) {
-			formattedDate = format(dateObject, 'MMMM d, yyyy'); // Example format: January 1, 2024
-		} else {
-			console.warn(`Invalid date format for post ${slug}: ${post.frontmatter.date}`);
-			formattedDate = 'Invalid Date'; // Fallback display
+	// Format the post's date for display. Handles potential invalid date strings.
+	let formattedDate = 'Date Unavailable'; // Default fallback
+	const dateString = post.frontmatter.date;
+	if (dateString) {
+		// Try parsing as ISO string first, then fall back to direct Date constructor
+		let dateObject = parseISO(dateString);
+		if (!isValid(dateObject)) {
+			dateObject = new Date(dateString); // Attempt direct parsing
 		}
-	} catch (error) {
-		console.error(`Error formatting date for post ${slug}:`, error);
-		formattedDate = 'Error Formatting Date'; // Fallback display
+
+		if (isValid(dateObject)) {
+			formattedDate = format(dateObject, 'MMMM d, yyyy'); // e.g., January 1, 2024
+		} else {
+			console.warn(`Invalid date format for post "${slug}": ${dateString}`);
+			formattedDate = 'Invalid Date';
+		}
 	}
 
-	// Format author(s)
-	const authors = Array.isArray(post.frontmatter.author)
-		? post.frontmatter.author.join(', ')
-		: post.frontmatter.author || 'Unknown Author'; // Default if author is missing
+	// Format author(s) into a display string. Handles single or multiple authors.
+	const authorList = post.frontmatter.author;
+	const authorsDisplay = Array.isArray(authorList)
+		? authorList.join(', ')
+		: authorList || 'Unknown Author'; // Provide a default if author is missing
 
 	return (
 		<main className="bg-background text-foreground min-h-screen">
@@ -112,26 +126,25 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 						items={[
 							{ label: 'Home', href: '/' },
 							{ label: 'Blog', href: '/blog' },
-							// Current post title is not linked
-							{ label: post.frontmatter.title, href: `/blog/${slug}` } // Removed active: true
+							// The current post's title in the breadcrumb is not linked.
+							{ label: post.frontmatter.title, href: `/blog/${slug}` }
 						]}
 					/>
 
 					<article className="relative mt-8">
-						{/* Add Table of Contents */}
 						<TableOfContents items={tocItems} />
 
 						<h1 className="mb-4 text-3xl font-bold md:text-4xl">{post.frontmatter.title}</h1>
 
 						<div className="text-muted-foreground mb-8 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
 							{formattedDate && <span>{formattedDate}</span>}
-							{formattedDate && authors && <span className="mx-1">•</span>}
-							{authors && <span>By {authors}</span>}
-							{/* Read time could be calculated and added here */}
+							{formattedDate && authorsDisplay && <span className="mx-1">•</span>}
+							{authorsDisplay && <span>By {authorsDisplay}</span>}
 						</div>
 
-						{/* Render the markdown content */}
-						{/* Added prose-headings:relative and prose-headings:group for hover effect */}
+						{/* Main content area rendered from Markdown */}
+						{/* prose-headings:relative/group enables hover effects on heading links */}
+						{/* prose-headings:scroll-mt-20 adds top margin when scrolling to headings via links */}
 						<div className="prose dark:prose-invert lg:prose-lg prose-headings:scroll-mt-20 prose-headings:relative prose-headings:group prose-a:text-primary hover:prose-a:text-primary/80 max-w-none">
 							<ReactMarkdown
 								remarkPlugins={[remarkGfm]}
@@ -140,13 +153,18 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 									[
 										rehypeAutolinkHeadings,
 										{
-											// Add links to headings
-											behavior: 'append', // 'wrap', 'prepend', 'append'
-											// Added Tailwind classes for hover effect and basic styling
+											// Configuration for rehype-autolink-headings plugin:
+											// Adds clickable anchor links (#) next to headings.
+											behavior: 'append', // Places the link *after* the heading text.
 											properties: {
-												// Restored opacity, removed absolute positioning, added margin-left
-												// Added text-primary for color
-												// Removed text-primary to inherit prose link color
+												// CSS classes applied to the generated anchor link.
+												// Uses Tailwind for styling:
+												// - 'anchor-link': Base identifier (optional, for custom CSS).
+												// - 'ml-2': Margin to space it from the heading.
+												// - 'opacity-0 group-hover:opacity-100': Initially hidden, appears on heading hover (requires 'group' on heading parent).
+												// - 'transition-opacity': Smooth fade effect.
+												// - 'text-primary': Link color (can be adjusted).
+												// - 'group-hover:underline': Underlines on hover for better affordance.
 												className: [
 													'anchor-link',
 													'ml-2',
@@ -159,16 +177,16 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 												ariaHidden: true,
 												tabIndex: -1
 											},
-											// Using '#' symbol for the link content
+											// The content of the anchor link (the visible symbol).
 											content: { type: 'text', value: '#' }
 										}
 									]
 								]}
 								components={
 									{
-										// Optional: Add custom components for specific markdown elements
-										// e.g., img: CustomImageComponent, a: CustomLinkComponent
-										// Note: Styling the autolink icon might require CSS targeting '.anchor-link svg'
+										// Custom React components can be provided here to override
+										// default HTML elements rendered from Markdown.
+										// Example: { img: CustomImage, a: CustomLink }
 									}
 								}
 							>
@@ -176,7 +194,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 							</ReactMarkdown>
 						</div>
 
-						{/* Tags Section */}
+						{/* Display post tags if available */}
 						{post.frontmatter.tags && post.frontmatter.tags.length > 0 && (
 							<div className="border-border mt-12 border-t pt-6">
 								<h3 className="mb-4 text-lg font-medium">Tags</h3>
@@ -184,7 +202,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 									{post.frontmatter.tags.map((tag) => (
 										<Link
 											key={tag}
-											href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`} // Simple slugification
+											href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`} // Basic slug generation for tag links
 											className="bg-muted hover:bg-muted/80 text-muted-foreground rounded-md px-3 py-1 text-sm transition-colors"
 										>
 											{tag}
@@ -194,35 +212,41 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 							</div>
 						)}
 
-						{/* Navigation Section */}
-						{/* Navigation Section - Updated Styling & Content */}
+						{/* Previous/Next Post Navigation */}
 						<div
-							className={`mt-8 flex items-start justify-between gap-4 ${!post.frontmatter.tags || post.frontmatter.tags.length === 0 ? 'border-border border-t pt-6' : ''}`}
+							className={`mt-12 flex items-start justify-between gap-4 ${
+								// Add a top border only if there are no tags displayed above
+								!post.frontmatter.tags || post.frontmatter.tags.length === 0
+									? 'border-border border-t pt-8' // Increased spacing
+									: 'pt-2' // Reduced spacing if tags are present
+							}`}
 						>
 							{prevPost ? (
 								<Link
 									href={`/blog/${prevPost.slug}`}
-									className="bg-muted hover:bg-muted/80 dark:bg-muted dark:hover:bg-muted/80 text-foreground dark:text-foreground flex max-w-[calc(50%-0.5rem)] flex-col items-start rounded-md px-4 py-3 font-medium transition-colors" // Added styles, flex-col, max-width
+									className="bg-muted hover:bg-muted/80 text-foreground flex max-w-[calc(50%-0.5rem)] flex-col items-start rounded-md px-4 py-3 font-medium transition-colors"
 								>
+									{/* Label and Icon */}
 									<div className="mb-1 flex items-center text-sm">
-										{' '}
-										{/* Wrapper for icon and label */}
-										<span className="mr-1">«</span> {/* Replaced ChevronLeft */}
+										<span aria-hidden="true" className="mr-1">
+											«
+										</span>
 										<span>Previous</span>
 									</div>
+									{/* Post Title (truncated if necessary, though CSS handles wrapping) */}
 									<span className="text-muted-foreground block w-full text-xs break-words">
-										{' '}
-										{/* Title below, allows wrapping */}
 										{prevPost.title}
 									</span>
 								</Link>
 							) : (
-								// Link to blog index if no previous post - Updated Styling
+								// If no previous post, link back to the main blog page.
 								<Link
 									href="/blog"
-									className="bg-muted hover:bg-muted/80 dark:bg-muted dark:hover:bg-muted/80 text-foreground dark:text-foreground flex max-w-[calc(50%-0.5rem)] items-center rounded-md px-6 py-2 font-medium transition-colors" // Added styles, kept items-center
+									className="bg-muted hover:bg-muted/80 text-foreground flex max-w-[calc(50%-0.5rem)] items-center rounded-md px-4 py-3 font-medium transition-colors" // Match styling of prev/next links
 								>
-									<span className="mr-1">«</span> {/* Replaced ChevronLeft */}
+									<span aria-hidden="true" className="mr-1">
+										«
+									</span>
 									<span>All Posts</span>
 								</Link>
 							)}
@@ -230,23 +254,23 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 							{nextPost ? (
 								<Link
 									href={`/blog/${nextPost.slug}`}
-									className="bg-muted hover:bg-muted/80 dark:bg-muted dark:hover:bg-muted/80 text-foreground dark:text-foreground ml-auto flex max-w-[calc(50%-0.5rem)] flex-col items-end rounded-md px-4 py-3 font-medium transition-colors" // Added styles, flex-col, items-end, ml-auto, max-width
+									className="bg-muted hover:bg-muted/80 text-foreground ml-auto flex max-w-[calc(50%-0.5rem)] flex-col items-end rounded-md px-4 py-3 font-medium transition-colors" // ml-auto pushes to the right
 								>
+									{/* Label and Icon */}
 									<div className="mb-1 flex items-center text-sm">
-										{' '}
-										{/* Wrapper for icon and label */}
 										<span>Next</span>
-										<span className="ml-1">»</span> {/* Replaced ChevronRight */}
+										<span aria-hidden="true" className="ml-1">
+											»
+										</span>
 									</div>
+									{/* Post Title (truncated if necessary, though CSS handles wrapping) */}
 									<span className="text-muted-foreground block w-full text-right text-xs break-words">
-										{' '}
-										{/* Title below, allows wrapping */}
 										{nextPost.title}
 									</span>
 								</Link>
 							) : (
-								// Placeholder to maintain layout if no next post
-								<div className="max-w-[calc(50%-0.5rem)]"></div> // Takes up space
+								// If no next post, render an empty div to maintain the flexbox layout alignment.
+								<div className="max-w-[calc(50%-0.5rem)]" aria-hidden="true"></div>
 							)}
 						</div>
 					</article>

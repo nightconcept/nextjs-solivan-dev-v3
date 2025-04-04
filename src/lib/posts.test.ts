@@ -6,11 +6,6 @@ import { getAllPosts, getPostBySlug } from './posts'; // Removed unused PostMeta
 // Mock the 'fs' module
 vi.mock('fs');
 
-// No longer mocking 'path' module directly here
-
-// Define the posts directory relative to the mocked process.cwd()
-// Removed unused MOCK_POSTS_DIR constant
-
 describe('lib/posts', () => {
 	// Mock process.cwd()
 	const originalCwd = process.cwd;
@@ -43,7 +38,7 @@ Post content here.
 
 			// Configure fs mocks for this specific test
 			const mockedFs = vi.mocked(fs);
-			mockedFs.readdirSync.mockReturnValue([mockFilename] as any[]); // Cast to satisfy mock type
+			mockedFs.readdirSync.mockReturnValue([mockFilename] as any[]);
 			mockedFs.readFileSync.mockImplementation((filePath) => {
 				// Calculate the path getAllPosts *should* be requesting based on mocked cwd
 				const expectedPath = path.join(process.cwd(), 'src/content/blog', mockFilename);
