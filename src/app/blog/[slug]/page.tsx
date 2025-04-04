@@ -13,6 +13,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { format } from 'date-fns'; // Using date-fns for formatting
+import escapeHtml from 'escape-html';
 
 // Define Props type for generateMetadata
 type Props = {
@@ -201,7 +202,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 						>
 							{prevPost ? (
 								<Link
-									href={`/blog/${prevPost.slug}`}
+									href={`/blog/${escapeHtml(prevPost.slug)}`}
 									className="bg-muted hover:bg-muted/80 dark:bg-muted dark:hover:bg-muted/80 text-foreground dark:text-foreground flex max-w-[calc(50%-0.5rem)] flex-col items-start rounded-md px-4 py-3 font-medium transition-colors" // Added styles, flex-col, max-width
 								>
 									<div className="mb-1 flex items-center text-sm">
@@ -229,7 +230,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 
 							{nextPost ? (
 								<Link
-									href={`/blog/${nextPost.slug}`}
+									href={`/blog/${escapeHtml(nextPost.slug)}`}
 									className="bg-muted hover:bg-muted/80 dark:bg-muted dark:hover:bg-muted/80 text-foreground dark:text-foreground ml-auto flex max-w-[calc(50%-0.5rem)] flex-col items-end rounded-md px-4 py-3 font-medium transition-colors" // Added styles, flex-col, items-end, ml-auto, max-width
 								>
 									<div className="mb-1 flex items-center text-sm">
