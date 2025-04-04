@@ -6,15 +6,12 @@ import { useState } from 'react';
 import { PostMetadata } from '@/lib/posts'; // Only import the type
 import { ChevronRight } from 'lucide-react';
 
-// Define props interface
 interface BlogPostListProps {
-	posts: PostMetadata[]; // Add posts prop
+	posts: PostMetadata[];
 	page?: number;
 	postsPerPage?: number;
 	showSeeMore?: boolean;
 }
-
-// Removed top-level getAllPosts() call
 
 export default function BlogPostList({
 	posts,
@@ -37,7 +34,6 @@ export default function BlogPostList({
 	const hasMorePosts = totalPosts > postsPerPage && currentPosts.length > 0; // Check if there are actually posts to show more of
 
 	const handlePostClick = (slug: string) => {
-		console.log('Clicked post with slug:', slug); // Add console log
 		setClickedPostSlug(slug);
 		// Navigate after a short delay for visual feedback
 		setTimeout(() => {
@@ -120,5 +116,3 @@ export default function BlogPostList({
 		</div>
 	);
 }
-
-// Removed export { blogPosts } as mock data is no longer used
