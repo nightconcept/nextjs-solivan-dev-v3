@@ -3,7 +3,7 @@ import Footer from '@/components/footer';
 import Breadcrumb from '@/components/breadcrumb';
 import { getAllPosts, PostMetadata } from '@/lib/posts'; // Import from lib/posts
 import Link from 'next/link';
-// Removed unused notFound import
+import escapeHtml from 'escape-html';
 import { Metadata } from 'next'; // Removed unused ResolvingMetadata
 import { siteMetadataConfig } from '@/lib/metadata.config'; // Import the config
 
@@ -77,7 +77,7 @@ export default async function TagPage(props: { params: Promise<{ tag: string }> 
 									>
 										{' '}
 										{/* Use slug for key */}
-										<Link href={`/blog/${post.slug}`}>
+										<Link href={`/blog/${escapeHtml(post.slug)}`}>
 											{' '}
 											{/* Use slug for link */}
 											<h3 className="hover:text-primary/80 dark:hover:text-primary/80 mb-2 text-xl font-bold transition-colors">
