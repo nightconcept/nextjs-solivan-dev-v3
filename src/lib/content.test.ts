@@ -10,7 +10,7 @@ vi.mock('fs');
 
 // Define mock paths *before* any imports that might use them
 const MOCK_CWD = '/mock/project';
-const MOCK_CONTENT_DIR = '/mock/project/content'; // Use literal path for simplicity in mock setup
+const MOCK_CONTENT_DIR = '/mock/project/src/content'; // Updated mock path
 
 // Mock process.cwd() globally for this test file
 vi.spyOn(process, 'cwd').mockReturnValue(MOCK_CWD);
@@ -22,7 +22,7 @@ vi.doMock('path', async () => {
 		...actual,
 		join: vi.fn((...args: string[]) => {
 			// Check if this is the specific call defining contentDirectory in lib/content.ts
-			if (args.length === 2 && args[0] === MOCK_CWD && args[1] === 'content') {
+			if (args.length === 2 && args[0] === MOCK_CWD && args[1] === 'src/content') { // Check for 'src/content'
 				return MOCK_CONTENT_DIR; // Return our mock path
 			}
 			// Use actual join for other calls

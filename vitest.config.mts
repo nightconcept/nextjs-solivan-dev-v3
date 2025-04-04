@@ -22,7 +22,7 @@ export default defineConfig({
 	resolve: {
 		// <-- Moved resolve block here
 		alias: {
-			'@': path.dirname(fileURLToPath(import.meta.url)) // Use import.meta.url for ESM path
+			'@': path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'src') // Point alias to src directory
 		}
 		// },
 	}

@@ -73,9 +73,9 @@ if (inputArg.endsWith('.md')) {
 	console.log(`Generated filename: "${filename}"`);
 }
 
-const targetDir = path.join('content', 'blog');
+const targetDir = path.join('src', 'content', 'blog');
 const targetPath = path.join(targetDir, filename);
-const templatePath = path.join('templates', 'blog.md');
+const templatePath = path.join('src', 'templates', 'blog.md');
 
 // 1. Ensure target directory exists
 try {

@@ -30,4 +30,4 @@ next-env.d.ts
 
 /playwright-report/
 /test-results/
-test-results/.last-run.json
+/test-results/.last-run.json
