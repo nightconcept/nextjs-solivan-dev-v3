@@ -5,10 +5,10 @@ readTime: 2
 updated:
 status: published
 author: ["Danny"]
-categories: 
-- blog
-tags: 
-- game-dev
+categories:
+  - blog
+tags:
+  - game-dev
 description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
@@ -17,13 +17,13 @@ comments: true
 showToc: false # show contents
 TocOpen: false # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
-disableShare: true	# do not show share button
+disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
 
 October was a fairly sparse month for game development. I got a little burned out of aimlessly coding. I was working on breakout in pygame using an [Entity-Component-System](https://en.wikipedia.org/wiki/Entity_component_system).

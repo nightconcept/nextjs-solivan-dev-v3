@@ -3,10 +3,10 @@ title: "What is This?"
 date: 2021-11-30T00:00:00-08:00
 lastmod: 2021-11-30T00:00:00-08:00
 author: ["Danny"]
-categories: 
-- blog
-tags: 
-- blog
+categories:
+  - blog
+tags:
+  - blog
 description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
@@ -15,13 +15,13 @@ comments: true
 showToc: true # show contents
 TocOpen: true # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
-disableShare: true	# do not show share button
+disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
 
 What is the purpose of this website? The combination of the URL & blog name, the sidebar description and this nobody writer all reveal nothing about what this place is. I think the best way to summarize really what this site is: this website is a personal blog which can vary from some common topics that I think about like politics and video games (development sometimes!) to macroeconomics and marriage all in the pursuit of "developing" better writing. I don't really know what I am going to talk about on each given post.

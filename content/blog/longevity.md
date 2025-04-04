@@ -3,10 +3,10 @@ title: "Longevity"
 date: 2024-09-12T14:40:21-07:00
 lastmod: 2024-09-12T14:40:21-07:00
 author: ["Danny"]
-categories: 
-- blog
-tags: 
-- opinion
+categories:
+  - blog
+tags:
+  - opinion
 description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
@@ -15,13 +15,13 @@ comments: true
 showToc: true # show contents
 TocOpen: true # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
-disableShare: true	# do not show share button
+disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
 
 I've been a bit of a health junkie for most of my life. I've been trying to figure it all out. It seems to be the most confusing science that there has been.

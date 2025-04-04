@@ -1,5 +1,5 @@
-import Header from "@/components/header"
-import ProfileCard from "@/components/profile-card"
+import Header from "@/components/header";
+import ProfileCard from "@/components/profile-card";
 import BlogPostList from "@/components/blog-post-list";
 import Footer from "@/components/footer";
 import { getAllPosts } from "@/lib/posts"; // Import the data fetching function
@@ -14,12 +14,16 @@ export default function Home() {
           <ProfileCard />
           <div className="mt-16">
             <h2 className="text-2xl font-bold mb-8">Recent Posts</h2>
-            <BlogPostList posts={allPosts} postsPerPage={3} showSeeMore={true} /> {/* Pass posts data */}
+            <BlogPostList
+              posts={allPosts}
+              postsPerPage={3}
+              showSeeMore={true}
+            />{" "}
+            {/* Pass posts data */}
           </div>
         </div>
         <Footer />
       </div>
     </div>
-  )
+  );
 }
-

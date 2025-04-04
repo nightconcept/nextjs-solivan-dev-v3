@@ -5,10 +5,10 @@ readTime: 2
 updated:
 status: published
 author: ["Danny"]
-categories: 
-- blog
-tags: 
-- personal
+categories:
+  - blog
+tags:
+  - personal
 description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
@@ -17,13 +17,13 @@ comments: true
 showToc: false # show contents
 TocOpen: false # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
-disableShare: true	# do not show share button
+disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
 
 I have a few different goals with this blog.

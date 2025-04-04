@@ -1,30 +1,30 @@
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import { Metadata, ResolvingMetadata } from 'next'; // Added for metadata
-import { getAllPosts, getPostBySlug, PostMetadata } from '@/lib/posts';
-import Header from '@/components/header';
-import Footer from '@/components/footer';
-import Breadcrumb from '@/components/breadcrumb';
-import TableOfContents from '@/components/table-of-contents'; // Added TOC component
-import { extractHeadings } from '@/lib/toc'; // Added heading extraction utility
-import { Link as LinkIcon } from 'lucide-react'; // Added for potential future icon use, though not directly in rehype content for now
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeSlug from 'rehype-slug';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import { format } from 'date-fns'; // Using date-fns for formatting
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { Metadata, ResolvingMetadata } from "next"; // Added for metadata
+import { getAllPosts, getPostBySlug, PostMetadata } from "@/lib/posts";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+import Breadcrumb from "@/components/breadcrumb";
+import TableOfContents from "@/components/table-of-contents"; // Added TOC component
+import { extractHeadings } from "@/lib/toc"; // Added heading extraction utility
+import { Link as LinkIcon } from "lucide-react"; // Added for potential future icon use, though not directly in rehype content for now
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import { format } from "date-fns"; // Using date-fns for formatting
 
 // Define Props type for generateMetadata
 type Props = {
-  params: Promise<{ slug: string }>
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
 
 // Generate metadata for the page
 export async function generateMetadata(
   props: Props,
   // Optional: Access parent metadata
-  parent: ResolvingMetadata
+  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const params = await props.params;
   const slug = params.slug;
@@ -33,7 +33,7 @@ export async function generateMetadata(
   if (!post) {
     // Optionally handle not found case for metadata, though page itself handles 404
     return {
-      title: 'Post Not Found',
+      title: "Post Not Found",
     };
   }
 
@@ -80,29 +80,31 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
   const currentIndex = allPosts.findIndex((p) => p.slug === slug);
 
   const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
-  const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+  const nextPost =
+    currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
 
   // Format date for display
-  let formattedDate = '';
+  let formattedDate = "";
   try {
     // Ensure date is valid before formatting
     const dateObject = new Date(post.frontmatter.date);
     if (!isNaN(dateObject.getTime())) {
-      formattedDate = format(dateObject, 'MMMM d, yyyy'); // Example format: January 1, 2024
+      formattedDate = format(dateObject, "MMMM d, yyyy"); // Example format: January 1, 2024
     } else {
-        console.warn(`Invalid date format for post ${slug}: ${post.frontmatter.date}`);
-        formattedDate = 'Invalid Date'; // Fallback display
+      console.warn(
+        `Invalid date format for post ${slug}: ${post.frontmatter.date}`,
+      );
+      formattedDate = "Invalid Date"; // Fallback display
     }
   } catch (error) {
-      console.error(`Error formatting date for post ${slug}:`, error);
-      formattedDate = 'Error Formatting Date'; // Fallback display
+    console.error(`Error formatting date for post ${slug}:`, error);
+    formattedDate = "Error Formatting Date"; // Fallback display
   }
-
 
   // Format author(s)
   const authors = Array.isArray(post.frontmatter.author)
-    ? post.frontmatter.author.join(', ')
-    : post.frontmatter.author || 'Unknown Author'; // Default if author is missing
+    ? post.frontmatter.author.join(", ")
+    : post.frontmatter.author || "Unknown Author"; // Default if author is missing
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -111,8 +113,8 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
         <div className="mt-8 max-w-3xl mx-auto">
           <Breadcrumb
             items={[
-              { label: 'Home', href: '/' },
-              { label: 'Blog', href: '/blog' },
+              { label: "Home", href: "/" },
+              { label: "Blog", href: "/blog" },
               // Current post title is not linked
               { label: post.frontmatter.title, href: `/blog/${slug}` }, // Removed active: true
             ]}
@@ -122,7 +124,9 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
             {/* Add Table of Contents */}
             <TableOfContents items={tocItems} />
 
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">{post.frontmatter.title}</h1>
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">
+              {post.frontmatter.title}
+            </h1>
 
             <div className="flex flex-wrap items-center text-sm text-muted-foreground mb-8 gap-x-3 gap-y-1">
               {formattedDate && <span>{formattedDate}</span>}
@@ -137,27 +141,41 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[
-                    rehypeSlug, // Add IDs to headings
-                    [rehypeAutolinkHeadings, { // Add links to headings
-                        behavior: 'append', // 'wrap', 'prepend', 'append'
-                        // Added Tailwind classes for hover effect and basic styling
-                        properties: {
-                            // Restored opacity, removed absolute positioning, added margin-left
-                            // Added text-primary for color
-                            // Removed text-primary to inherit prose link color
-                            className: ['anchor-link', 'ml-2', 'opacity-0', 'group-hover:opacity-100', 'transition-opacity', 'text-primary', 'group-hover:underline'],
-                            ariaHidden: true,
-                            tabIndex: -1
-                        },
-                        // Using '#' symbol for the link content
-                        content: { type: 'text', value: '#' }
-                    }]
+                  rehypeSlug, // Add IDs to headings
+                  [
+                    rehypeAutolinkHeadings,
+                    {
+                      // Add links to headings
+                      behavior: "append", // 'wrap', 'prepend', 'append'
+                      // Added Tailwind classes for hover effect and basic styling
+                      properties: {
+                        // Restored opacity, removed absolute positioning, added margin-left
+                        // Added text-primary for color
+                        // Removed text-primary to inherit prose link color
+                        className: [
+                          "anchor-link",
+                          "ml-2",
+                          "opacity-0",
+                          "group-hover:opacity-100",
+                          "transition-opacity",
+                          "text-primary",
+                          "group-hover:underline",
+                        ],
+                        ariaHidden: true,
+                        tabIndex: -1,
+                      },
+                      // Using '#' symbol for the link content
+                      content: { type: "text", value: "#" },
+                    },
+                  ],
                 ]}
-                components={{
-                  // Optional: Add custom components for specific markdown elements
-                  // e.g., img: CustomImageComponent, a: CustomLinkComponent
-                  // Note: Styling the autolink icon might require CSS targeting '.anchor-link svg'
-                }}
+                components={
+                  {
+                    // Optional: Add custom components for specific markdown elements
+                    // e.g., img: CustomImageComponent, a: CustomLinkComponent
+                    // Note: Styling the autolink icon might require CSS targeting '.anchor-link svg'
+                  }
+                }
               >
                 {post.content}
               </ReactMarkdown>
@@ -171,7 +189,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
                   {post.frontmatter.tags.map((tag) => (
                     <Link
                       key={tag}
-                      href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`} // Simple slugification
+                      href={`/tags/${tag.toLowerCase().replace(/\s+/g, "-")}`} // Simple slugification
                       className="bg-muted hover:bg-muted/80 text-muted-foreground px-3 py-1 rounded-md text-sm transition-colors"
                     >
                       {tag}
@@ -183,29 +201,35 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 
             {/* Navigation Section */}
             {/* Navigation Section - Updated Styling & Content */}
-            <div className={`flex justify-between items-start mt-8 gap-4 ${(!post.frontmatter.tags || post.frontmatter.tags.length === 0) ? 'pt-6 border-t border-border' : ''}`}>
+            <div
+              className={`flex justify-between items-start mt-8 gap-4 ${!post.frontmatter.tags || post.frontmatter.tags.length === 0 ? "pt-6 border-t border-border" : ""}`}
+            >
               {prevPost ? (
                 <Link
                   href={`/blog/${prevPost.slug}`}
                   className="bg-muted hover:bg-muted/80 dark:bg-muted dark:hover:bg-muted/80 text-foreground dark:text-foreground px-4 py-3 rounded-md font-medium transition-colors flex flex-col items-start max-w-[calc(50%-0.5rem)]" // Added styles, flex-col, max-width
                 >
-                  <div className="flex items-center text-sm mb-1"> {/* Wrapper for icon and label */}
+                  <div className="flex items-center text-sm mb-1">
+                    {" "}
+                    {/* Wrapper for icon and label */}
                     <span className="mr-1">«</span> {/* Replaced ChevronLeft */}
                     <span>Previous</span>
                   </div>
-                  <span className="text-xs text-muted-foreground block w-full break-words"> {/* Title below, allows wrapping */}
+                  <span className="text-xs text-muted-foreground block w-full break-words">
+                    {" "}
+                    {/* Title below, allows wrapping */}
                     {prevPost.title}
                   </span>
                 </Link>
               ) : (
                 // Link to blog index if no previous post - Updated Styling
-                (<Link
+                <Link
                   href="/blog"
                   className="bg-muted hover:bg-muted/80 dark:bg-muted dark:hover:bg-muted/80 text-foreground dark:text-foreground px-6 py-2 rounded-md font-medium transition-colors flex items-center max-w-[calc(50%-0.5rem)]" // Added styles, kept items-center
                 >
                   <span className="mr-1">«</span> {/* Replaced ChevronLeft */}
                   <span>All Posts</span>
-                </Link>)
+                </Link>
               )}
 
               {nextPost ? (
@@ -213,17 +237,22 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
                   href={`/blog/${nextPost.slug}`}
                   className="bg-muted hover:bg-muted/80 dark:bg-muted dark:hover:bg-muted/80 text-foreground dark:text-foreground px-4 py-3 rounded-md font-medium transition-colors flex flex-col items-end ml-auto max-w-[calc(50%-0.5rem)]" // Added styles, flex-col, items-end, ml-auto, max-width
                 >
-                   <div className="flex items-center text-sm mb-1"> {/* Wrapper for icon and label */}
+                  <div className="flex items-center text-sm mb-1">
+                    {" "}
+                    {/* Wrapper for icon and label */}
                     <span>Next</span>
-                    <span className="ml-1">»</span> {/* Replaced ChevronRight */}
+                    <span className="ml-1">»</span>{" "}
+                    {/* Replaced ChevronRight */}
                   </div>
-                  <span className="text-xs text-muted-foreground block w-full text-right break-words"> {/* Title below, allows wrapping */}
+                  <span className="text-xs text-muted-foreground block w-full text-right break-words">
+                    {" "}
+                    {/* Title below, allows wrapping */}
                     {nextPost.title}
                   </span>
                 </Link>
               ) : (
-                 // Placeholder to maintain layout if no next post
-                 (<div className="max-w-[calc(50%-0.5rem)]"></div>) // Takes up space
+                // Placeholder to maintain layout if no next post
+                <div className="max-w-[calc(50%-0.5rem)]"></div> // Takes up space
               )}
             </div>
           </article>

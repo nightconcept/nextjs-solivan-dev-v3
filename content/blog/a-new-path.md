@@ -3,10 +3,10 @@ title: "A New Path"
 date: 2024-11-06T10:28:03-08:00
 lastmod: 2024-11-06T10:28:03-08:00
 author: ["Danny"]
-categories: 
-- blog
-tags: 
-- opinion
+categories:
+  - blog
+tags:
+  - opinion
 description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
@@ -15,17 +15,19 @@ comments: true
 showToc: true # show contents
 TocOpen: true # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
-disableShare: true	# do not show share button
+disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
-So, the election happened. Ignoring policy differences, I think my biggest grievance is we chose an angry, immature man to run the most powerful country in the world. I do not want to be in a world where this is OK especially for my children. We should be able to respectfully disagree with each other and move on. However, the ballots showed that as long as he delivers the economy this is OK. Sorry, but I can't accept creating a toxic workplace in exchange for supposed gains for people. I have a high level of certainty that my family and I will be fine, but I do worry for those around us who are not as fortunate. I will be living in a community with those who may not be as fortunate and if they are pushed down, well my quality of life will suffer. It *is* important to take care of everyone around us. A rising tide raises all boats as they say.
 
-So what am *I* doing? Well, I've chosen to take this opportunity to disengage with the toxic doom scrolling and internet. The election season is over so now I do not have to "care" as much. I can't do anything until the next cycle. So here's what's changing:
+So, the election happened. Ignoring policy differences, I think my biggest grievance is we chose an angry, immature man to run the most powerful country in the world. I do not want to be in a world where this is OK especially for my children. We should be able to respectfully disagree with each other and move on. However, the ballots showed that as long as he delivers the economy this is OK. Sorry, but I can't accept creating a toxic workplace in exchange for supposed gains for people. I have a high level of certainty that my family and I will be fine, but I do worry for those around us who are not as fortunate. I will be living in a community with those who may not be as fortunate and if they are pushed down, well my quality of life will suffer. It _is_ important to take care of everyone around us. A rising tide raises all boats as they say.
+
+So what am _I_ doing? Well, I've chosen to take this opportunity to disengage with the toxic doom scrolling and internet. The election season is over so now I do not have to "care" as much. I can't do anything until the next cycle. So here's what's changing:
+
 - I have a family who needs me to be present with them.
 - My family deserves my energy and not the incoming toxic cycle of news that will inevitably flood all news sites. I do not regularly view The New York Times and The Hill anymore, but I definitely will not during the next four years.
 - I will be focused on viewing only local news that affects my life. I am fortunate to live in a blue state that lines up with most of my ideals so I will generally be shielded from crazy-goings-ons of DC.

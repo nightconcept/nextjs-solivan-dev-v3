@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { ThemeToggle } from "./theme-toggle"
-import { Leaf, Menu, X } from "lucide-react"
-import { useState } from "react"
+import Link from "next/link";
+import { ThemeToggle } from "./theme-toggle";
+import { Leaf, Menu, X } from "lucide-react";
+import { useState } from "react";
 
 export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <header className="py-4 max-w-3xl mx-auto sticky top-0 z-30 bg-background border-b border-border">
@@ -37,8 +37,15 @@ export default function Header() {
         </div>
 
         <div className="sm:hidden">
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2">
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2"
+          >
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
           </button>
         </div>
       </div>
@@ -68,6 +75,5 @@ export default function Header() {
         </div>
       )}
     </header>
-  )
+  );
 }
-

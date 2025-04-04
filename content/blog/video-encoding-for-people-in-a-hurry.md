@@ -5,10 +5,10 @@ updated:
 ogpublished:
 status: draft
 author: ["Danny"]
-categories: 
-- blog
-tags: 
-- opinion
+categories:
+  - blog
+tags:
+  - opinion
 description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
@@ -17,13 +17,13 @@ comments: true
 showToc: false # show contents
 TocOpen: false # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
-disableShare: true	# do not show share button
+disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
 
 This a quick _opinionated_ guide towards encoding your videos for your data hoarding habits. [HandBrake](https://handbrake.fr/) is an open-source tool that is widely used by many to convert videos. It is available on Windows/macOS/Linux, so chances are you can use it. HandBrake itself is mostly an easy to use GUI that call various audio and video codecs so you don't have to learn how to use those individual (mostly command-line) tools. This is an article for people in a hurry so let's get going!

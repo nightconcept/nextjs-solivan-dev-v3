@@ -1,37 +1,37 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { List, ChevronRight } from "lucide-react"
-import Link from "next/link"
+import { useState, useEffect } from "react";
+import { List, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 interface TOCItem {
-  id: string
-  title: string
-  level: number
+  id: string;
+  title: string;
+  level: number;
 }
 
 interface TableOfContentsProps {
-  items: TOCItem[]
+  items: TOCItem[];
 }
 
 export default function TableOfContents({ items }: TableOfContentsProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [hasSpace, setHasSpace] = useState(false) // Default to false, let useEffect confirm space
+  const [isOpen, setIsOpen] = useState(false);
+  const [hasSpace, setHasSpace] = useState(false); // Default to false, let useEffect confirm space
 
   // Check if there's enough space to show the TOC
   useEffect(() => {
     const checkSpace = () => {
-      const windowWidth = window.innerWidth
+      const windowWidth = window.innerWidth;
       // Hide TOC on smaller screens to prevent overlap with content
-      setHasSpace(windowWidth > 1024)
-    }
+      setHasSpace(windowWidth > 1024);
+    };
 
-    checkSpace()
-    window.addEventListener("resize", checkSpace)
-    return () => window.removeEventListener("resize", checkSpace)
-  }, [])
+    checkSpace();
+    window.addEventListener("resize", checkSpace);
+    return () => window.removeEventListener("resize", checkSpace);
+  }, []);
 
-  if (items.length === 0 || !hasSpace) return null
+  if (items.length === 0 || !hasSpace) return null;
 
   return (
     <div className="fixed right-4 bottom-16 z-10">
@@ -71,7 +71,10 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
               <nav>
                 <ul className="space-y-2">
                   {items.map((item) => (
-                    <li key={item.id} className={`text-sm ${item.level > 2 ? "ml-3" : ""}`}>
+                    <li
+                      key={item.id}
+                      className={`text-sm ${item.level > 2 ? "ml-3" : ""}`}
+                    >
                       <Link
                         href={`#${item.id}`}
                         className="flex items-center text-on-surface dark:text-on-surface-dark hover:text-primary dark:hover:text-primary-dark transition-colors"
@@ -89,5 +92,5 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
         )}
       </div>
     </div>
-  )
+  );
 }

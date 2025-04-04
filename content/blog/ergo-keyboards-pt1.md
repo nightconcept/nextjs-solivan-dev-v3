@@ -3,10 +3,10 @@ title: "Ergonomic Keyboards Pt1"
 date: 2024-04-20T11:57:57-07:00
 lastmod: 2024-04-20T11:57:57-07:00
 author: ["Danny"]
-categories: 
-- blog
-tags: 
-- opinion
+categories:
+  - blog
+tags:
+  - opinion
 description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
@@ -15,27 +15,32 @@ comments: true
 showToc: true # show contents
 TocOpen: true # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
-disableShare: true	# do not show share button
+disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
+
 # Ergonomic Keyboards, Part 1
 
 ## The Problem
+
 I started work as a software engineer about 7 months ago now. With many long hours sitting and staring at the screen, I realized that my hands and arms were hurting. I also noticed my eyes were hurting, but I resolved that by being more dedicated to following my [Stretchly](https://hovancik.net/stretchly/) routines (every 20 minutes, start at something 20 ft away for 20 seconds and every hour, take a 2 minute walk). I started researching into keyboards to see if they would help me.
 
 ## The Requirements
-I stumbled upon Reddit's (r/ergomechkeyboards)[https://www.reddit.com/r/ErgoMechKeyboards/] community to see what keybards were available. I had spent some time previously looking at just regular mechanical keyboards, but I stopped when I realized I *hated* putting in o-rings. I immediately stopped considering new keyboards altogether. Anyways, after an excessive amount of browsing, I settled on the following criteria for an ergonomic mechanical keyboard:
+
+I stumbled upon Reddit's (r/ergomechkeyboards)[https://www.reddit.com/r/ErgoMechKeyboards/] community to see what keybards were available. I had spent some time previously looking at just regular mechanical keyboards, but I stopped when I realized I _hated_ putting in o-rings. I immediately stopped considering new keyboards altogether. Anyways, after an excessive amount of browsing, I settled on the following criteria for an ergonomic mechanical keyboard:
+
 - **Mechanical** - I don't think there's a non-mechanical option anyways, but nonetheless a requirement!
 - **Hotswappable** - I still don't really know what mechanical switch I like using.
 - **Split** - Left and right sections of the keyboard split in order to open up the chest.
 - **Pre-built** - I did not want to do much assembly. Especially no soldering.
 
 I did have other considerations I wasn't sure about that were relatively new to me:
+
 - **Ortholinear** - In this configuration, keys are in a square grid rather than offset like regular QWERTY keyboards. The [Planck](https://olkb.com/collections/planck) is a good example of an ortholinear keyboard.
 - **Columnar Stagger** - In this configuration, keys are staggered only vertically because each finger has a different length. This configuration. The [Sofle](https://github.com/josefadamcik/SofleKeyboard) is a good example of a columnar stagger (also split) keyboard.
 - **RGB Lighting** - Not really a hard requirement, but a nice to have especially for keyboards at home where I might be typing more often in the dark. I will not be looking at the keys while I type because I am a decent touch typist, but it helps for visibility. At work, this is a non-issue as the lights are always on.
@@ -103,4 +108,5 @@ I ordered this from keeb.io as a backup for not having dedicated function keys. 
 I expect the Lily58 keyboard to arrive tomorrow and do expect this to be the "end" of my ergo-mech shopping journey for a long time. The Lily58 has the most keys available to me with good positioning (at least hypothetically). I will persist through learning layers and we'll see where that gets me. The thought of moving to a 42 key board like a Corne scares me due to my desire/need. For me, it would be an exercise in learning a skill rather than finding something that alleviates and prevents pain while typing. I think my actual dream keyboard would be a columnar stagger 75% keyboard. If no such keyboard comes to fruition and the Lily58 doesn't work out, I might consider changing my QWERTY keyboards layout to Colemak-DH.
 
 # References
+
 - [The Different Keyboard Sizes and Layouts Explained - Switch and Click](https://switchandclick.com/keyboard-sizes/)

@@ -4,10 +4,10 @@ date: 2021-12-10
 updated:
 status: published
 author: ["Danny"]
-categories: 
-- blog
-tags: 
-- opinion
+categories:
+  - blog
+tags:
+  - opinion
 description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
@@ -16,13 +16,13 @@ comments: true
 showToc: false # show contents
 TocOpen: false # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
-disableShare: true	# do not show share button
+disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
 
 "DO YouR OwN resEarCH" as they say since the start of the pandemic. I have been. My #1 source for all COVID-19 related news has been from The New York Times. I remember throughout the early pandemic, I was doing research all day while I worked from home. I was learning all sorts of things about epidemiology, viruses, pandemics, you name it. It felt _amazing_ to be learning all this stuff. I was in school for MBA, but things are totally different when you are learning for _fun_.

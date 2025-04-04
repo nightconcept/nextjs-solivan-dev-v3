@@ -1,12 +1,12 @@
 ---
 title:
-date: 
+date:
 lastmod:
 author: ["Danny"]
-categories: 
-- blog
-tags: 
-- opinion
+categories:
+  - blog
+tags:
+  - opinion
 description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
@@ -15,8 +15,8 @@ comments: true
 showToc: false # show contents
 TocOpen: true # open contents automantically
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---

@@ -1,18 +1,20 @@
 // scripts/new-blog.js
-const fs = require('fs');
-const path = require('path');
-const { format } = require('date-fns'); // Use date-fns for formatting
+const fs = require("fs");
+const path = require("path");
+const { format } = require("date-fns"); // Use date-fns for formatting
 
 // Helper function for sanitizing title to slug/filename base
 // Converts to lowercase, replaces spaces with hyphens, removes most non-alphanumeric chars
 function sanitizeTitle(title) {
-  return title
-    .toLowerCase()
-    // Remove characters that are not letters (incl. Unicode), numbers, spaces, or hyphens
-    .replace(/[^\p{L}\p{N}\s-]/gu, '')
-    .trim() // Remove leading/trailing whitespace
-    .replace(/\s+/g, '-') // Replace spaces with hyphens
-    .replace(/-+/g, '-'); // Replace multiple hyphens with single one
+  return (
+    title
+      .toLowerCase()
+      // Remove characters that are not letters (incl. Unicode), numbers, spaces, or hyphens
+      .replace(/[^\p{L}\p{N}\s-]/gu, "")
+      .trim() // Remove leading/trailing whitespace
+      .replace(/\s+/g, "-") // Replace spaces with hyphens
+      .replace(/-+/g, "-")
+  ); // Replace multiple hyphens with single one
 }
 
 // Helper function to format date locally with timezone offset
@@ -22,33 +24,42 @@ function getFormattedLocalDate() {
   try {
     return format(now, "yyyy-MM-dd'T'HH:mm:ssXXX");
   } catch (e) {
-      console.error("Error formatting date. Ensure 'date-fns' is installed.", e);
-      // Fallback to basic ISO string if formatting fails
-      return now.toISOString();
+    console.error("Error formatting date. Ensure 'date-fns' is installed.", e);
+    // Fallback to basic ISO string if formatting fails
+    return now.toISOString();
   }
 }
 
 const args = process.argv.slice(2);
 
 if (args.length !== 1) {
-  console.error('Usage: node scripts/new-blog.js <filename.md | Blog Post Title>');
+  console.error(
+    "Usage: node scripts/new-blog.js <filename.md | Blog Post Title>",
+  );
   process.exit(1);
 }
 
 const inputArg = args[0];
 let filename;
 let slug;
-let title = ''; // Default title is empty (will use template's default)
+let title = ""; // Default title is empty (will use template's default)
 
 // Determine if input is filename or title, derive slug/filename/title
-if (inputArg.endsWith('.md')) {
+if (inputArg.endsWith(".md")) {
   // Input is a filename
   filename = inputArg;
-  slug = path.basename(filename, '.md');
+  slug = path.basename(filename, ".md");
   // Basic validation for filename-derived slug
-  if (!slug || slug.includes('/') || slug.includes('\\') || slug.includes('..')) {
-     console.error(`Error: Invalid filename or slug derived from filename: "${inputArg}"`);
-     process.exit(1);
+  if (
+    !slug ||
+    slug.includes("/") ||
+    slug.includes("\\") ||
+    slug.includes("..")
+  ) {
+    console.error(
+      `Error: Invalid filename or slug derived from filename: "${inputArg}"`,
+    );
+    process.exit(1);
   }
   console.log(`Input is a filename: "${filename}"`);
   console.log(`Derived slug: "${slug}"`);
@@ -57,12 +68,14 @@ if (inputArg.endsWith('.md')) {
   // Input is treated as a title
   title = inputArg.trim(); // Use the argument directly as title, trim whitespace
   if (!title) {
-    console.error('Error: Blog post title cannot be empty.');
+    console.error("Error: Blog post title cannot be empty.");
     process.exit(1);
   }
   slug = sanitizeTitle(title);
   if (!slug) {
-    console.error(`Error: Could not generate a valid slug from the title: "${title}"`);
+    console.error(
+      `Error: Could not generate a valid slug from the title: "${title}"`,
+    );
     process.exit(1);
   }
   filename = `${slug}.md`;
@@ -71,10 +84,9 @@ if (inputArg.endsWith('.md')) {
   console.log(`Generated filename: "${filename}"`);
 }
 
-
-const targetDir = path.join('content', 'blog');
+const targetDir = path.join("content", "blog");
 const targetPath = path.join(targetDir, filename);
-const templatePath = path.join('templates', 'blog.md');
+const templatePath = path.join("templates", "blog.md");
 
 // 1. Ensure target directory exists
 try {
@@ -94,7 +106,7 @@ if (fs.existsSync(targetPath)) {
 // 3. Read the template file
 let templateContent;
 try {
-  templateContent = fs.readFileSync(templatePath, 'utf8');
+  templateContent = fs.readFileSync(templatePath, "utf8");
   console.log(`Template ${templatePath} read successfully.`);
 } catch (err) {
   console.error(`Error reading template file ${templatePath}:`, err);
@@ -106,7 +118,10 @@ const localDate = getFormattedLocalDate();
 
 templateContent = templateContent.replace(/^slug:.*$/m, `slug: "${slug}"`);
 templateContent = templateContent.replace(/^date:.*$/m, `date: ${localDate}`);
-templateContent = templateContent.replace(/^lastmod:.*$/m, `lastmod: ${localDate}`);
+templateContent = templateContent.replace(
+  /^lastmod:.*$/m,
+  `lastmod: ${localDate}`,
+);
 
 // Only replace title if it was derived from the input argument
 if (title) {
@@ -116,7 +131,7 @@ if (title) {
 
 // 5. Write the new file
 try {
-  fs.writeFileSync(targetPath, templateContent, 'utf8');
+  fs.writeFileSync(targetPath, templateContent, "utf8");
   console.log(`Successfully created blog post at ${targetPath}`);
 } catch (err) {
   console.error(`Error writing file ${targetPath}:`, err);

@@ -3,10 +3,10 @@ title: "Sweat the Small Things"
 date: 2025-03-19T11:00:52-07:00
 lastmod: 2025-03-19T11:00:52-07:00
 author: ["Danny"]
-categories: 
-- blog
-tags: 
-- lessons learned
+categories:
+  - blog
+tags:
+  - lessons learned
 description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
@@ -15,15 +15,16 @@ comments: true
 showToc: false # show contents
 TocOpen: true # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
-disableShare: true	# do not show share button
+disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
-Today, I had an issue with my [Hugo](https://gohugo.io/) and [PaperMod](https://github.com/adityatelange/hugo-PaperMod) powered blog. Hugo and PaperMod are the only 2 dependencies in my blog and I figured I'd pull them up. I started with pulling up PaperMod, but had issues with minimum version. I thought I was on a new enough version of Hugo (0.138 from my recollection) on Windows, but the pushed site still did not render properly on Vercel. 
+
+Today, I had an issue with my [Hugo](https://gohugo.io/) and [PaperMod](https://github.com/adityatelange/hugo-PaperMod) powered blog. Hugo and PaperMod are the only 2 dependencies in my blog and I figured I'd pull them up. I started with pulling up PaperMod, but had issues with minimum version. I thought I was on a new enough version of Hugo (0.138 from my recollection) on Windows, but the pushed site still did not render properly on Vercel.
 
 I switched over to my Mac, ran `nix flake update` and my site built and rendered properly on Vercel again. OK! Now I'm up and running again!
 

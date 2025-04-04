@@ -4,10 +4,10 @@ date: 2021-12-09
 updated:
 status: published
 author: ["Danny"]
-categories: 
-- blog
-tags: 
-- opinion
+categories:
+  - blog
+tags:
+  - opinion
 description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
@@ -16,13 +16,13 @@ comments: true
 showToc: false # show contents
 TocOpen: false # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
-disableShare: true	# do not show share button
+disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
 
 I am going to start a collection of what would be Tweets or Twitlongers. All of these will be thoughts too poorly thought out to be it's own post, but too long to be a tweet. Every numbered section would have been a its own Tweet or Twitlonger

@@ -1,31 +1,30 @@
-import { notFound } from 'next/navigation';
-import { Metadata, ResolvingMetadata } from 'next';
-import { getAllMarkdownPages, getMarkdownPageBySlug } from '@/lib/content'; // Import new functions
+import { notFound } from "next/navigation";
+import { Metadata, ResolvingMetadata } from "next";
+import { getAllMarkdownPages, getMarkdownPageBySlug } from "@/lib/content"; // Import new functions
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import Breadcrumb from '@/components/breadcrumb';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeSlug from 'rehype-slug';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import Breadcrumb from "@/components/breadcrumb";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
 // Define Props type for generateMetadata and the Page component
-export type Props = { // Export the type
-  params: Promise<{ page: string }> // Changed 'slug' to 'page'
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}
+export type Props = {
+  // Export the type
+  params: Promise<{ page: string }>; // Changed 'slug' to 'page'
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
 
 // Generate metadata for the page dynamically
 export async function generateMetadata(
   props: Props,
   // Optional: Access parent metadata
-  parent: ResolvingMetadata
+  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const params = await props.params;
 
-  const {
-    page: pageSlug
-  } = params;
+  const { page: pageSlug } = params;
 
   // const pageSlug = params.page; // No longer needed
   const pageData = getMarkdownPageBySlug(pageSlug); // Use the new function
@@ -33,14 +32,14 @@ export async function generateMetadata(
   if (!pageData) {
     // Return default metadata or handle as needed if page not found
     return {
-      title: 'Page Not Found',
+      title: "Page Not Found",
     };
   }
 
   // Return metadata object using frontmatter title
   return {
     title: pageData.frontmatter.title,
-    description: pageData.frontmatter.description || '', // Use description from frontmatter if available
+    description: pageData.frontmatter.description || "", // Use description from frontmatter if available
     // Add other metadata fields from frontmatter if desired
   };
 }
@@ -57,9 +56,7 @@ export async function generateStaticParams() {
 export default async function Page(props: Props) {
   const params = await props.params;
 
-  const {
-    page: pageSlug
-  } = params;
+  const { page: pageSlug } = params;
 
   // Destructure page directly
   // const pageSlug = params.page; // No longer needed
@@ -72,7 +69,9 @@ export default async function Page(props: Props) {
   }
 
   // Capitalize the page slug for the breadcrumb label if title is missing (fallback)
-  const pageTitle = pageData.frontmatter.title || pageSlug.charAt(0).toUpperCase() + pageSlug.slice(1);
+  const pageTitle =
+    pageData.frontmatter.title ||
+    pageSlug.charAt(0).toUpperCase() + pageSlug.slice(1);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -81,9 +80,9 @@ export default async function Page(props: Props) {
         <div className="mt-8 max-w-3xl mx-auto">
           <Breadcrumb
             items={[
-              { label: 'Home', href: '/' },
+              { label: "Home", href: "/" },
               // Use dynamic title and path
-              { label: pageTitle, href: `/${pageSlug}` }
+              { label: pageTitle, href: `/${pageSlug}` },
             ]}
           />
           <article className="mt-8 relative">
@@ -93,19 +92,30 @@ export default async function Page(props: Props) {
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[
-                    rehypeSlug, // Add IDs to headings
-                    [rehypeAutolinkHeadings, { // Add links to headings
-                        behavior: 'append',
-                        properties: { className: ['anchor-link'], ariaHidden: true, tabIndex: -1 },
-                        content: () => [
-                          {
-                            type: 'element',
-                            tagName: 'span',
-                            properties: { className: 'heading-link-icon', 'aria-hidden': 'true' },
-                            children: []
-                          }
-                        ]
-                    }]
+                  rehypeSlug, // Add IDs to headings
+                  [
+                    rehypeAutolinkHeadings,
+                    {
+                      // Add links to headings
+                      behavior: "append",
+                      properties: {
+                        className: ["anchor-link"],
+                        ariaHidden: true,
+                        tabIndex: -1,
+                      },
+                      content: () => [
+                        {
+                          type: "element",
+                          tagName: "span",
+                          properties: {
+                            className: "heading-link-icon",
+                            "aria-hidden": "true",
+                          },
+                          children: [],
+                        },
+                      ],
+                    },
+                  ],
                 ]}
               >
                 {pageData.content}

@@ -4,11 +4,11 @@ date: 2022-03-25
 updated:
 status: published
 author: ["Danny"]
-categories: 
-- blog
-tags: 
-- opinion
-- politics
+categories:
+  - blog
+tags:
+  - opinion
+  - politics
 description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
@@ -17,13 +17,13 @@ comments: true
 showToc: false # show contents
 TocOpen: false # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
-disableShare: true	# do not show share button
+disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
 
 I love the Supreme Court. I got to see the building last fall. I have read "The Nine" by Jeffrey Toobin. As a liberal, I love RBG. I love the little snippets of quip and oration from the Justices and the lawyers who need to argue before them. I am not a lawyer, but maybe in another universe, I could have been.

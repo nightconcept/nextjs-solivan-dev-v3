@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-import { PostMetadata } from "@/lib/posts" // Only import the type
-import { ChevronRight } from "lucide-react"
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { PostMetadata } from "@/lib/posts"; // Only import the type
+import { ChevronRight } from "lucide-react";
 
 // Define props interface
 interface BlogPostListProps {
@@ -16,28 +16,34 @@ interface BlogPostListProps {
 
 // Removed top-level getAllPosts() call
 
-export default function BlogPostList({ posts, page = 1, postsPerPage = 5, showSeeMore = false }: BlogPostListProps) { // Accept posts prop
-  const router = useRouter()
-  const [clickedPostSlug, setClickedPostSlug] = useState<string | null>(null) // Use slug (string) instead of id (number)
-// Filter out draft posts BEFORE pagination/rendering
-const publishedPosts = posts.filter(post => post.draft !== true); // Keep if draft is false or undefined
+export default function BlogPostList({
+  posts,
+  page = 1,
+  postsPerPage = 5,
+  showSeeMore = false,
+}: BlogPostListProps) {
+  // Accept posts prop
+  const router = useRouter();
+  const [clickedPostSlug, setClickedPostSlug] = useState<string | null>(null); // Use slug (string) instead of id (number)
+  // Filter out draft posts BEFORE pagination/rendering
+  const publishedPosts = posts.filter((post) => post.draft !== true); // Keep if draft is false or undefined
 
-// Calculate pagination based on the *filtered* posts
-const totalPosts = publishedPosts.length // Use filtered list length
-const totalPages = Math.ceil(totalPosts / postsPerPage)
-const startIndex = (page - 1) * postsPerPage
-const endIndex = startIndex + postsPerPage
-const currentPosts = publishedPosts.slice(startIndex, endIndex) // Slice the filtered list
-  const hasMorePosts = totalPosts > postsPerPage && currentPosts.length > 0 // Check if there are actually posts to show more of
+  // Calculate pagination based on the *filtered* posts
+  const totalPosts = publishedPosts.length; // Use filtered list length
+  const totalPages = Math.ceil(totalPosts / postsPerPage);
+  const startIndex = (page - 1) * postsPerPage;
+  const endIndex = startIndex + postsPerPage;
+  const currentPosts = publishedPosts.slice(startIndex, endIndex); // Slice the filtered list
+  const hasMorePosts = totalPosts > postsPerPage && currentPosts.length > 0; // Check if there are actually posts to show more of
 
   const handlePostClick = (slug: string) => {
     console.log("Clicked post with slug:", slug); // Add console log
-    setClickedPostSlug(slug)
+    setClickedPostSlug(slug);
     // Navigate after a short delay for visual feedback
     setTimeout(() => {
-      router.push(`/blog/${slug}`) // Use slug in the URL
-    }, 300)
-  }
+      router.push(`/blog/${slug}`); // Use slug in the URL
+    }, 300);
+  };
 
   return (
     <div>
@@ -53,16 +59,29 @@ const currentPosts = publishedPosts.slice(startIndex, endIndex) // Slice the fil
             <h3 className="text-xl font-bold mb-2 hover:text-primary/80 dark:hover:text-primary/80 transition-colors">
               {post.title}
             </h3>
-            <p className="text-card-foreground dark:text-card-foreground mb-4">{post.excerpt}</p>
+            <p className="text-card-foreground dark:text-card-foreground mb-4">
+              {post.excerpt}
+            </p>
             <div className="flex items-center text-sm text-muted-foreground dark:text-muted-foreground">
               {/* Format dateObject for display */}
-              <span>{post.dateObject.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <span>
+                {post.dateObject.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </span>
               <span className="mx-2">•</span>
               <span>{post.readTime} read</span>
               {post.author && ( // Conditionally render author if available
                 <>
                   <span className="mx-2">•</span>
-                  <span>By {Array.isArray(post.author) ? post.author.join(', ') : post.author}</span>
+                  <span>
+                    By{" "}
+                    {Array.isArray(post.author)
+                      ? post.author.join(", ")
+                      : post.author}
+                  </span>
                 </>
               )}
             </div>
@@ -104,7 +123,7 @@ const currentPosts = publishedPosts.slice(startIndex, endIndex) // Slice the fil
         </div>
       )}
     </div>
-  )
+  );
 }
 
 // Removed export { blogPosts } as mock data is no longer used

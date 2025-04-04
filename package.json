@@ -8,10 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "blog": "node scripts/new-blog.js $*",
-    "test:e2e": "playwright test",
-    "test:component": "vitest",
-    "test:status": "vitest run tests/status.test.ts",
-    "test": "pnpm run test:component && pnpm run test:status"
+    "format": "prettier --write .",
+    "test:unit": "vitest",
+    "test": "pnpm run test:unit -- --run && pnpm run test:e2e",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.4",
@@ -53,8 +53,10 @@
     "@vitest/ui": "^3.1.1",
     "eslint": "^9.23.0",
     "eslint-config-next": "15.2.4",
+    "eslint-config-prettier": "^10.1.1",
     "jsdom": "^26.0.0",
     "postcss": "^8",
+    "prettier": "^3.5.3",
     "tailwindcss": "^4.1.1",
     "typescript": "^5",
     "vitest": "^3.1.1"

@@ -6,10 +6,10 @@ lastmod: 2024-03-14
 ogpublished: 2022-04-09
 status: published
 author: ["Danny"]
-categories: 
-- blog
-tags: 
-- opinion
+categories:
+  - blog
+tags:
+  - opinion
 description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
@@ -18,13 +18,13 @@ comments: true
 showToc: false # show contents
 TocOpen: false # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
-disableShare: true	# do not show share button
+disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
 
 This page is inspired by [Wes Bos' uses](https://wesbos.com/uses) page and all the others from [uses.tech](https://uses.tech/). This page will continually be updated as I change my uses and setup.
@@ -130,7 +130,7 @@ Dedicated computer for our Sony 55" 4K TV downstairs that we watch shows on or p
 
 ### Tablets
 
-- [Samsung Galaxy Tab S6 Lite (2022)](https://www.gsmarena.com/samsung_galaxy_tab_s6_lite_(2022)-11524.php) - For reading comics and occasional Plexing
+- [Samsung Galaxy Tab S6 Lite (2022)](<https://www.gsmarena.com/samsung_galaxy_tab_s6_lite_(2022)-11524.php>) - For reading comics and occasional Plexing
 - [iPad 4th Generation](https://support.apple.com/kb/SP662?locale=en_US) - My dedicated work Spotify speaker
 
 ### E-Readers
@@ -167,7 +167,7 @@ Dedicated computer for our Sony 55" 4K TV downstairs that we watch shows on or p
 
 I use a[automatic-os-setup](https://github.com/nightconcept/automatic-os-setup) to imperatively configure my OS as I need some system packages installed.
 
-I use [dotfiles](https://github.com/nightconcept/dotfiles-nix) with Nix package manager with home manager to install user-level packages I need onto any *nix systems. 
+I use [dotfiles](https://github.com/nightconcept/dotfiles-nix) with Nix package manager with home manager to install user-level packages I need onto any \*nix systems.
 
 ## Development Tools
 
@@ -207,6 +207,7 @@ I use [dotfiles](https://github.com/nightconcept/dotfiles-nix) with Nix package 
 ## Change Log
 
 ---
+
 - 11-6-2024: Updated play laptop, home server, and software.
 - 3-13-2024: Updated keyboards, new laptop, new home server, and software.
 - 2-5-2024: Updated desktop, home server, and software.

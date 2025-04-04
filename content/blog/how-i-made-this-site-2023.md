@@ -5,10 +5,10 @@ readTime: 10
 updated:
 status: published
 author: ["Danny"]
-categories: 
-- blog
-tags: 
-- web-dev
+categories:
+  - blog
+tags:
+  - web-dev
 description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
@@ -17,13 +17,13 @@ comments: true
 showToc: false # show contents
 TocOpen: false # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
-disableShare: true	# do not show share button
+disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
 
 Despite how long this site has been up, I actually started in March 2023. This is not an explicit tutorial, but you could probably follow along and get through building your own similar site if you wanted.

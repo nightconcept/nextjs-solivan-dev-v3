@@ -4,10 +4,10 @@ date: 2022-03-18
 updated:
 status: published
 author: ["Danny"]
-categories: 
-- blog
-tags: 
-- opinion
+categories:
+  - blog
+tags:
+  - opinion
 description: ""
 weight: # 1 means pin the article, sort articles according to this number
 slug: ""
@@ -16,13 +16,13 @@ comments: true
 showToc: false # show contents
 TocOpen: false # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
-disableShare: true	# do not show share button
+disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
 
 I keep talking and thinking about how I can reach a creator state. It turns out, I am the biggest blocker for reaching that creator state (no surprises there). Self-doubt, imposter syndrome, a fear of putting myself out there are all reasons I have been afraid to push more content. Does anyone care? _Who cares?_ I am doing this for me. To push myself beyond what I am comfortable and capable of right now. This is my journey of self improvement.

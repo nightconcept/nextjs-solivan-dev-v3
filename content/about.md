@@ -13,14 +13,15 @@ comments: false
 # showToc: false # show contents - Removed duplicate key
 TocOpen: true # open contents automantically
 hidemeta: false # hide information (author, create date, etc.)
-disableShare: true	# do not show share button
+disableShare: true # do not show share button
 showbreadcrumbs: true # show current path
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
+
 Hi,
 
 I am Danny Solivan. I am a wannabe novel/short story writer, [self-published](https://www.lulu.com/search?adult_audience_rating=00&contributor=Danny+Solivan&page=1&pageSize=10) poet, and a web developer. By education, I am an electrical engineer with a soon-to-be masters in
