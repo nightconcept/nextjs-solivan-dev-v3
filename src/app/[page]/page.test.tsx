@@ -62,14 +62,20 @@ describe('Page Component - /app/[page]/page.tsx', () => {
 		vi.mocked(getMarkdownPageBySlug).mockResolvedValue(MOCK_ABOUT_PAGE); // Explicitly set for this test
 
 		// Render the async component
-		const PagePromise = Page({ params: Promise.resolve({ page: slug }), searchParams: Promise.resolve({}) });
+		const PagePromise = Page({
+			params: Promise.resolve({ page: slug }),
+			searchParams: Promise.resolve({})
+		});
 		render(await PagePromise);
 
 		// Check Title (H1) - Scope the search within the article to distinguish from markdown H1
-		      const article = screen.getByRole('article');
+		const article = screen.getByRole('article');
 		// Use getAllByRole and check the first element, as both the page title H1
-		      // and the markdown H1 are within the article
-		const headings = within(article).getAllByRole('heading', { level: 1, name: MOCK_ABOUT_PAGE.frontmatter.title });
+		// and the markdown H1 are within the article
+		const headings = within(article).getAllByRole('heading', {
+			level: 1,
+			name: MOCK_ABOUT_PAGE.frontmatter.title
+		});
 		expect(headings[0]).toBeInTheDocument(); // Check the first H1 found (the page title)
 
 		// Check Breadcrumb
@@ -103,26 +109,29 @@ describe('Page Component - /app/[page]/page.tsx', () => {
 		expect(notFound).toHaveBeenCalledTimes(1);
 	});
 
-    it('should use capitalized slug as title if frontmatter title is missing', async () => {
-        const slug = 'missing-title';
-        const mockPageWithoutTitle = {
-            slug: slug,
-            frontmatter: {
-                title: '', // Use empty string to test fallback, satisfying the type
-                description: 'Test description'
-            },
-            content: 'Page content here'
-        };
-        vi.mocked(getMarkdownPageBySlug).mockResolvedValue(mockPageWithoutTitle);
+	it('should use capitalized slug as title if frontmatter title is missing', async () => {
+		const slug = 'missing-title';
+		const mockPageWithoutTitle = {
+			slug: slug,
+			frontmatter: {
+				title: '', // Use empty string to test fallback, satisfying the type
+				description: 'Test description'
+			},
+			content: 'Page content here'
+		};
+		vi.mocked(getMarkdownPageBySlug).mockResolvedValue(mockPageWithoutTitle);
 
-        const PagePromise = Page({ params: Promise.resolve({ page: slug }), searchParams: Promise.resolve({}) });
-        render(await PagePromise);
+		const PagePromise = Page({
+			params: Promise.resolve({ page: slug }),
+			searchParams: Promise.resolve({})
+		});
+		render(await PagePromise);
 
-        // Expect H1 to be the capitalized slug
-        expect(screen.getByRole('heading', { level: 1, name: 'Missing-title' })).toBeInTheDocument();
-        // Expect breadcrumb to also use capitalized slug
-        expect(screen.getByRole('link', { name: 'Missing-title' })).toHaveAttribute('href', `/${slug}`);
-    });
+		// Expect H1 to be the capitalized slug
+		expect(screen.getByRole('heading', { level: 1, name: 'Missing-title' })).toBeInTheDocument();
+		// Expect breadcrumb to also use capitalized slug
+		expect(screen.getByRole('link', { name: 'Missing-title' })).toHaveAttribute('href', `/${slug}`);
+	});
 });
 
 describe('generateMetadata - /app/[page]/page.tsx', () => {
@@ -135,7 +144,10 @@ describe('generateMetadata - /app/[page]/page.tsx', () => {
 		const slug = 'about';
 		vi.mocked(getMarkdownPageBySlug).mockReturnValue(MOCK_ABOUT_PAGE);
 
-		const metadata = await generateMetadata({ params: Promise.resolve({ page: slug }), searchParams: Promise.resolve({}) });
+		const metadata = await generateMetadata({
+			params: Promise.resolve({ page: slug }),
+			searchParams: Promise.resolve({})
+		});
 
 		expect(metadata).toEqual({
 			title: MOCK_ABOUT_PAGE.frontmatter.title,
@@ -148,7 +160,10 @@ describe('generateMetadata - /app/[page]/page.tsx', () => {
 		const slug = 'non-existent-page';
 		vi.mocked(getMarkdownPageBySlug).mockReturnValue(null); // Simulate page not found
 
-		const metadata = await generateMetadata({ params: Promise.resolve({ page: slug }), searchParams: Promise.resolve({}) });
+		const metadata = await generateMetadata({
+			params: Promise.resolve({ page: slug }),
+			searchParams: Promise.resolve({})
+		});
 
 		expect(metadata).toEqual({
 			title: 'Page Not Found'
@@ -156,25 +171,28 @@ describe('generateMetadata - /app/[page]/page.tsx', () => {
 		expect(getMarkdownPageBySlug).toHaveBeenCalledWith(slug);
 	});
 
-    it('should handle missing description in frontmatter', async () => {
-        const slug = 'no-description';
-        const mockPageWithoutDesc = {
-            slug: slug,
-            frontmatter: {
-                title: 'No Description Page'
-                // description is missing
-            },
-            content: 'Content...'
-        };
-        vi.mocked(getMarkdownPageBySlug).mockReturnValue(mockPageWithoutDesc);
+	it('should handle missing description in frontmatter', async () => {
+		const slug = 'no-description';
+		const mockPageWithoutDesc = {
+			slug: slug,
+			frontmatter: {
+				title: 'No Description Page'
+				// description is missing
+			},
+			content: 'Content...'
+		};
+		vi.mocked(getMarkdownPageBySlug).mockReturnValue(mockPageWithoutDesc);
 
-        const metadata = await generateMetadata({ params: Promise.resolve({ page: slug }), searchParams: Promise.resolve({}) });
+		const metadata = await generateMetadata({
+			params: Promise.resolve({ page: slug }),
+			searchParams: Promise.resolve({})
+		});
 
-        expect(metadata).toEqual({
-            title: 'No Description Page',
-            description: '' // Expect empty string as fallback
-        });
-    });
+		expect(metadata).toEqual({
+			title: 'No Description Page',
+			description: '' // Expect empty string as fallback
+		});
+	});
 });
 
 describe('generateStaticParams - /app/[page]/page.tsx', () => {
@@ -186,10 +204,7 @@ describe('generateStaticParams - /app/[page]/page.tsx', () => {
 	it('should generate static params based on all markdown pages', async () => {
 		const staticParams = await generateStaticParams();
 
-		expect(staticParams).toEqual([
-			{ page: MOCK_ABOUT_PAGE.slug },
-			{ page: MOCK_USES_PAGE.slug }
-		]);
+		expect(staticParams).toEqual([{ page: MOCK_ABOUT_PAGE.slug }, { page: MOCK_USES_PAGE.slug }]);
 		expect(getAllMarkdownPages).toHaveBeenCalledTimes(1);
 	});
 
