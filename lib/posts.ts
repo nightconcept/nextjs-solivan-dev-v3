@@ -10,7 +10,7 @@ interface PostFrontmatter {
 	tags?: string[];
 	description?: string;
 	// Add other fields from your frontmatter if needed
-	[key: string]: any; // Allow other arbitrary fields
+	// Removed index signature [key: string]: any; to resolve lint error
 }
 
 // Define the structure of the post metadata returned by getAllPosts
@@ -94,7 +94,8 @@ export function getAllPosts(options?: { includeContent?: boolean }): PostMetadat
 
 				// Combine the data with the slug, excerpt, and readTime
 				// Destructure slug from frontmatter data, collect the rest
-				const { slug: _frontmatterSlug, ...restFrontmatter } = data as PostFrontmatter;
+				// Cast the frontmatter data to the expected type
+				const frontmatter = data as PostFrontmatter;
 
 				return {
 					slug: slug, // Explicitly use the slug derived from the filename
@@ -102,7 +103,7 @@ export function getAllPosts(options?: { includeContent?: boolean }): PostMetadat
 					excerpt,
 					readTime,
 					...(includeContent && { content }), // Conditionally include content
-					...restFrontmatter // Spread the *rest* of the frontmatter properties
+					...frontmatter // Spread the validated frontmatter properties
 				};
 			} catch (error) {
 				console.error(`Error processing file ${filename}:`, error);

@@ -3,8 +3,8 @@ import Footer from '@/components/footer';
 import Breadcrumb from '@/components/breadcrumb';
 import { getAllPosts, PostMetadata } from '@/lib/posts'; // Import from lib/posts
 import Link from 'next/link';
-import { notFound } from 'next/navigation'; // Import notFound if needed
-import { Metadata, ResolvingMetadata } from 'next'; // Added for metadata
+// Removed unused notFound import
+import { Metadata } from 'next'; // Removed unused ResolvingMetadata
 import { siteMetadataConfig } from '@/lib/metadata.config'; // Import the config
 
 // Define Props type for generateMetadata
@@ -15,8 +15,8 @@ type Props = {
 
 // Generate metadata for the tag page
 export async function generateMetadata(
-	{ params }: Props,
-	parent: ResolvingMetadata // Optional: Access parent metadata
+	{ params }: Props
+	// parent: ResolvingMetadata // Removed unused parent parameter
 ): Promise<Metadata> {
 	const tagSlug = params.tag;
 
@@ -61,7 +61,9 @@ export default async function TagPage(props: { params: Promise<{ tag: string }> 
 						]}
 					/>
 
-					<h1 className="mt-8 mb-6 text-3xl font-bold">Posts tagged with "{formattedTag}"</h1>
+					<h1 className="mt-8 mb-6 text-3xl font-bold">
+						Posts tagged with &quot;{formattedTag}&quot;
+					</h1>
 
 					{filteredPosts.length > 0 ? (
 						<div className="space-y-8">

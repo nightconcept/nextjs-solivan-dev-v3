@@ -5,9 +5,15 @@ import '@testing-library/jest-dom';
 
 // Mock the SocialLinks component
 const mockSocialLinks = vi.fn();
+// Define an interface for the props expected by the mocked SocialLinks
+interface MockSocialLinksProps {
+	spacing?: string; // Based on the test, spacing is a string prop
+}
+
 vi.mock('./social-links', () => ({
 	// Use default export because SocialLinks seems to be a default export
-	default: (props: any) => {
+	default: (props: MockSocialLinksProps) => {
+		// Use the defined interface
 		mockSocialLinks(props); // Call the mock function with props
 		return <div data-testid="social-links-mock">SocialLinks</div>;
 	}

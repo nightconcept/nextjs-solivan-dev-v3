@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { Metadata, ResolvingMetadata } from 'next'; // Added for metadata
-import { getAllPosts, getPostBySlug, PostMetadata } from '@/lib/posts';
+import { Metadata } from 'next'; // Removed unused ResolvingMetadata
+import { getAllPosts, getPostBySlug } from '@/lib/posts'; // Removed unused PostMetadata import
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import Breadcrumb from '@/components/breadcrumb';
 import TableOfContents from '@/components/table-of-contents'; // Added TOC component
 import { extractHeadings } from '@/lib/toc'; // Added heading extraction utility
-import { Link as LinkIcon } from 'lucide-react'; // Added for potential future icon use, though not directly in rehype content for now
+// Removed unused LinkIcon import
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
@@ -22,9 +22,9 @@ type Props = {
 
 // Generate metadata for the page
 export async function generateMetadata(
-	props: Props,
+	props: Props
 	// Optional: Access parent metadata
-	parent: ResolvingMetadata
+	// parent: ResolvingMetadata // Removed unused parent parameter
 ): Promise<Metadata> {
 	const params = await props.params;
 	const slug = params.slug;

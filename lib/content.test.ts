@@ -69,7 +69,7 @@ describe('lib/content', () => {
 			// Mock implementation should now receive the MOCK_CONTENT_DIR
 			mockedFs.readdirSync.mockImplementation((dirPath, options) => {
 				if (dirPath === MOCK_CONTENT_DIR && options?.withFileTypes) {
-					return mockEntries as any;
+					return mockEntries as fs.Dirent[]; // Use the correct type fs.Dirent[]
 				}
 				// Log the received path for debugging if it fails
 				console.error(

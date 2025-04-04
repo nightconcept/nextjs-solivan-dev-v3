@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { notFound } from 'next/navigation'; // Import notFound
+// Removed unused notFound import
 
 // Define the structure of the frontmatter we expect for general pages
 interface PageFrontmatter {
@@ -10,7 +10,7 @@ interface PageFrontmatter {
 	author?: string | string[];
 	description?: string;
 	// Add other fields you might expect in top-level markdown files
-	[key: string]: any; // Allow other arbitrary fields
+	// Removed index signature [key: string]: any; to resolve lint error
 }
 
 // Define the structure of the data returned by getMarkdownPageBySlug

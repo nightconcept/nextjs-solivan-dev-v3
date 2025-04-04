@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next'; // Removed unused ResolvingMetadata
 import { getAllMarkdownPages, getMarkdownPageBySlug } from '@/lib/content'; // Import new functions
 import Header from '@/components/header';
 import Footer from '@/components/footer';
@@ -18,9 +18,9 @@ export type Props = {
 
 // Generate metadata for the page dynamically
 export async function generateMetadata(
-	props: Props,
+	props: Props
 	// Optional: Access parent metadata
-	parent: ResolvingMetadata
+	// parent: ResolvingMetadata // Removed unused parent parameter
 ): Promise<Metadata> {
 	const params = await props.params;
 

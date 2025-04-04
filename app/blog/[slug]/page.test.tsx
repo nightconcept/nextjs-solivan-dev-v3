@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react'; // Removed waitFor
 import BlogPostPage from './page'; // Adjust the import path if necessary
 import { getAllPosts, getPostBySlug } from '@/lib/posts'; // Adjust the import path if necessary
-import React from 'react';
+// Removed unused React import
 
 // Mock the lib/posts functions
 vi.mock('@/lib/posts', async (importOriginal) => {
@@ -54,25 +54,31 @@ So what am *I* doing? Well, I've chosen to take this opportunity to disengage wi
 All in all, I want to take these next four years as a chance to grow and do something productive for me. I will not wallow in loss.`
 		};
 
+		// Mock data needs to match PostMetadata type, including excerpt and readTime
 		const mockAllPosts = [
-			// Add another post if you want to test prev/next links more thoroughly
 			{
 				slug: 'another-post',
 				title: 'Another Post',
 				date: '2024-11-07T00:00:00-08:00',
-				dateObject: new Date('2024-11-07T00:00:00-08:00')
+				dateObject: new Date('2024-11-07T00:00:00-08:00'),
+				excerpt: 'Excerpt for another post', // Added
+				readTime: '5 min read' // Changed to string
 			},
 			{
 				slug: slug,
 				title: 'A New Path',
 				date: '2024-11-06T10:28:03-08:00',
-				dateObject: new Date('2024-11-06T10:28:03-08:00')
+				dateObject: new Date('2024-11-06T10:28:03-08:00'),
+				excerpt: 'Excerpt for a new path', // Added
+				readTime: '10 min read' // Changed to string
 			},
 			{
 				slug: 'older-post',
 				title: 'Older Post',
 				date: '2024-11-05T00:00:00-08:00',
-				dateObject: new Date('2024-11-05T00:00:00-08:00')
+				dateObject: new Date('2024-11-05T00:00:00-08:00'),
+				excerpt: 'Excerpt for older post', // Added
+				readTime: '3 min read' // Changed to string
 			}
 		];
 
@@ -82,8 +88,9 @@ All in all, I want to take these next four years as a chance to grow and do some
 		vi.mocked(getAllPosts).mockReturnValue(mockAllPosts);
 
 		// Render the component - It's an async Server Component, so we await the promise it returns
-		const PagePromise = BlogPostPage({ params: { slug } });
-		const { container } = render(await PagePromise);
+		// Wrap params in Promise.resolve to match async component props
+		const PagePromise = BlogPostPage({ params: Promise.resolve({ slug }) });
+		render(await PagePromise); // Removed unused container destructuring
 
 		// Wait for potential async operations within the component if necessary
 		// (ReactMarkdown might have some, though often rendering is synchronous after await)
@@ -129,7 +136,10 @@ All in all, I want to take these next four years as a chance to grow and do some
 		vi.mocked(getAllPosts).mockReturnValue([]); // Return empty array for this case
 
 		// Render the component and expect the mocked notFound to throw
-		await expect(BlogPostPage({ params: { slug } })).rejects.toThrow('Mocked notFound called');
+		// Wrap params in Promise.resolve here as well
+		await expect(BlogPostPage({ params: Promise.resolve({ slug }) })).rejects.toThrow(
+			'Mocked notFound called'
+		);
 
 		// Verify notFound was indeed called (implicitly checked by the rejection)
 	});

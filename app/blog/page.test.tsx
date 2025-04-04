@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest'; // Removed unused afterEach
 import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Blog from './page'; // The component under test

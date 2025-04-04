@@ -1,7 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { Button } from './button'; // Removed buttonVariants import as it's not directly used for types here
+import { Button } from './button';
+import Link from 'next/link'; // Import next/link
 import '@testing-library/jest-dom';
 
 // Mock cn utility if necessary, but often it's simple enough not to require mocking.
@@ -49,7 +50,7 @@ describe('Button Component', () => {
 	it('renders as child element when asChild prop is true', () => {
 		render(
 			<Button asChild variant="link" size="sm">
-				<a href="/test">Child Link</a>
+				<Link href="/test">Child Link</Link> {/* Use Link component */}
 			</Button>
 		);
 		// Should render the 'a' tag, not a 'button'

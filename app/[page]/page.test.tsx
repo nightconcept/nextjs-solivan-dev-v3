@@ -21,8 +21,13 @@ vi.mock('@/components/header', () => ({
 vi.mock('@/components/footer', () => ({
 	default: () => <div>Mock Footer</div>
 }));
+// Define a type for the breadcrumb items used in the mock
+interface MockBreadcrumbItem {
+	label: string;
+	href?: string; // Optional href if needed
+}
 vi.mock('@/components/breadcrumb', () => ({
-	default: ({ items }: { items: any[] }) => (
+	default: ({ items }: { items: MockBreadcrumbItem[] }) => (
 		<nav>Mock Breadcrumb: {items.map((item) => item.label).join(' > ')}</nav>
 	)
 }));
@@ -37,10 +42,13 @@ vi.mock('next/navigation', () => ({
 }));
 
 // Define a local type for the props expected by the component in this test context
-interface TestPageProps {
-	params: { page: string };
-	searchParams: { [key: string]: string | string[] | undefined };
-}
+// Import the actual Props type from the component file
+import { type Props as PageProps } from './page';
+
+// Use the imported Props type or a compatible one for testing
+// If PageProps is exactly what we need, we can use it directly.
+// If we need a slightly different shape for testing, define a specific test type.
+// Here, PageProps seems suitable.
 
 describe('Dynamic Page ([page]/page.tsx)', () => {
 	// Cast the mock function to the correct type for TypeScript
@@ -65,15 +73,16 @@ describe('Dynamic Page ([page]/page.tsx)', () => {
 		mockedGetMarkdownPageBySlug.mockResolvedValue(mockPageData); // Use mockResolvedValue for async simulation
 
 		// Render the component for the 'about' page
-		// Provide both params and searchParams
-		const props: TestPageProps = {
-			params: { page: 'about' },
-			searchParams: {}
+		// Provide props matching the PageProps type (wrapped in Promises)
+		const props: PageProps = {
+			params: Promise.resolve({ page: 'about' }),
+			searchParams: Promise.resolve({})
 		};
 		// Render is async for async components
 		// Resolve the async component before rendering
 		// Render the async component directly using JSX
-		render(<Page {...(props as any)} />);
+		// No need to cast anymore, props match the expected type
+		render(<Page {...props} />);
 
 		// Wait for the heading based on the mocked title to appear
 		const heading = await screen.findByRole('heading', {
@@ -99,12 +108,12 @@ describe('Dynamic Page ([page]/page.tsx)', () => {
 
 		// Expect the notFound function (mocked to throw) to be called
 		// Use waitFor to handle the async nature and potential state updates before notFound is called
-		const props: TestPageProps = {
-			params: { page: 'nonexistent' },
-			searchParams: {}
+		const props: PageProps = {
+			params: Promise.resolve({ page: 'nonexistent' }),
+			searchParams: Promise.resolve({})
 		};
 		// Render the component, it might complete even if notFound is called internally
-		render(<Page {...(props as any)} />); // render is sync
+		render(<Page {...props} />); // render is sync
 
 		// Assert that notFound was called after rendering and async operations
 		// Use waitFor to ensure we wait for the possibility of notFound being called asynchronously
