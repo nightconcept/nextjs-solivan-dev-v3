@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
-import { Metadata } from 'next'; // Removed unused ResolvingMetadata
-import { getAllMarkdownPages, getMarkdownPageBySlug } from '@/lib/content'; // Import new functions
+import { Metadata } from 'next';
+import { getAllMarkdownPages, getMarkdownPageBySlug } from '@/lib/content';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import Breadcrumb from '@/components/breadcrumb';
@@ -9,63 +9,54 @@ import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 
-// Define Props type for generateMetadata and the Page component
 export type Props = {
-	// Export the type
-	params: Promise<{ page: string }>; // Changed 'slug' to 'page'
+	params: Promise<{ page: string }>;
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 // Generate metadata for the page dynamically
 export async function generateMetadata(
 	props: Props
-	// Optional: Access parent metadata
-	// parent: ResolvingMetadata // Removed unused parent parameter
 ): Promise<Metadata> {
 	const params = await props.params;
 
 	const { page: pageSlug } = params;
 
-	// const pageSlug = params.page; // No longer needed
-	const pageData = getMarkdownPageBySlug(pageSlug); // Use the new function
+	const pageData = getMarkdownPageBySlug(pageSlug);
 
 	if (!pageData) {
-		// Return default metadata or handle as needed if page not found
+		// If the page isn't found by slug, return basic 'Not Found' metadata.
 		return {
 			title: 'Page Not Found'
 		};
 	}
 
-	// Return metadata object using frontmatter title
 	return {
 		title: pageData.frontmatter.title,
-		description: pageData.frontmatter.description || '' // Use description from frontmatter if available
-		// Add other metadata fields from frontmatter if desired
+		description: pageData.frontmatter.description || ''
 	};
 }
 
-// Generate static paths for all top-level markdown pages
+// Generates static paths for all top-level markdown pages.
+// This allows Next.js to pre-render these pages at build time for better performance.
 export async function generateStaticParams() {
-	const pages = getAllMarkdownPages(); // Use the new function
+	const pages = getAllMarkdownPages();
 	return pages.map((page) => ({
-		page: page.slug // Parameter name must match the directory name [page]
+		// The key 'page' must match the dynamic route segment `[page]` in the folder structure.
+		page: page.slug
 	}));
 }
 
-// The main page component
 export default async function Page(props: Props) {
 	const params = await props.params;
 
 	const { page: pageSlug } = params;
 
-	// Destructure page directly
-	// const pageSlug = params.page; // No longer needed
-	const pageData = await getMarkdownPageBySlug(pageSlug); // Await the async function call
+	const pageData = await getMarkdownPageBySlug(pageSlug);
 
-	// If the page data doesn't exist (e.g., invalid slug), show a 404 page
+	// If page data couldn't be retrieved for the given slug, render the standard Next.js 404 page.
 	if (!pageData) {
-		notFound();
-		// return null; // notFound() should handle this
+		notFound(); // This function interrupts rendering and shows the 404 page.
 	}
 
 	// Capitalize the page slug for the breadcrumb label if title is missing (fallback)
@@ -80,37 +71,35 @@ export default async function Page(props: Props) {
 					<Breadcrumb
 						items={[
 							{ label: 'Home', href: '/' },
-							// Use dynamic title and path
 							{ label: pageTitle, href: `/${pageSlug}` }
 						]}
 					/>
 					<article className="relative mt-8">
 						<h1 className="mb-8 text-3xl font-bold">{pageTitle}</h1>
-						{/* Render the markdown content */}
+						{/* Apply Tailwind Typography plugin styles for readable markdown rendering */}
 						<div className="prose dark:prose-invert lg:prose-lg prose-headings:scroll-mt-20 prose-a:text-primary hover:prose-a:text-primary/80 max-w-none">
 							<ReactMarkdown
 								remarkPlugins={[remarkGfm]}
 								rehypePlugins={[
-									rehypeSlug, // Add IDs to headings
+									rehypeSlug, // Automatically add 'id' attributes to headings (e.g., <h2 id="some-title">).
 									[
-										rehypeAutolinkHeadings,
+										rehypeAutolinkHeadings, // Adds anchor links to headings, requires rehypeSlug first.
 										{
-											// Add links to headings
-											behavior: 'append',
+											// Configure how the autolinks behave and appear.
+											behavior: 'append', // Add the link icon *after* the heading text.
 											properties: {
 												className: ['anchor-link'],
 												ariaHidden: true,
 												tabIndex: -1
 											},
+											// Define the content of the link itself. Here, it's an empty span
+											// intended to be styled with CSS to show a link icon (e.g., #).
 											content: () => [
 												{
 													type: 'element',
 													tagName: 'span',
-													properties: {
-														className: 'heading-link-icon',
-														'aria-hidden': 'true'
-													},
-													children: []
+													properties: { className: 'heading-link-icon', 'aria-hidden': 'true' },
+													children: [] // The link has no visible text content itself.
 												}
 											]
 										}

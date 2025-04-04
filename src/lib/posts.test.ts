@@ -6,11 +6,6 @@ import { getAllPosts, getPostBySlug } from './posts'; // Removed unused PostMeta
 // Mock the 'fs' module
 vi.mock('fs');
 
-// No longer mocking 'path' module directly here
-
-// Define the posts directory relative to the mocked process.cwd()
-// Removed unused MOCK_POSTS_DIR constant
-
 describe('lib/posts', () => {
 	// Mock process.cwd()
 	const originalCwd = process.cwd;
