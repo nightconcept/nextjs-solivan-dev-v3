@@ -1,129 +1,204 @@
-import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import Page from './page'; // Import the default export
-import { getMarkdownPageBySlug } from '@/lib/content'; // Import the function to mock
-import { notFound } from 'next/navigation'; // Import notFound for mocking reference
+import { render, screen, within } from '@testing-library/react';
+import Page, { generateMetadata, generateStaticParams } from './page'; // Adjust import path if needed
+import { getAllMarkdownPages, getMarkdownPageBySlug } from '@/lib/content'; // Adjust import path if needed
+import { notFound } from 'next/navigation';
 
-// Mock the content fetching function
+// Mock the lib/content functions
 vi.mock('@/lib/content', async (importOriginal) => {
-	const original = (await importOriginal()) as typeof import('@/lib/content');
+	const actual = (await importOriginal()) as typeof import('@/lib/content');
 	return {
-		...original, // Keep other exports if any
-		getMarkdownPageBySlug: vi.fn(), // Mock the specific function
-		getAllMarkdownPages: vi.fn(() => [{ slug: 'about' }, { slug: 'archives' }]) // Mock for generateStaticParams if needed by test setup
+		...actual, // Keep other exports if any
+		getAllMarkdownPages: vi.fn(),
+		getMarkdownPageBySlug: vi.fn()
 	};
 });
 
-// Mock child components
-vi.mock('@/components/header', () => ({
-	default: () => <div>Mock Header</div>
-}));
-vi.mock('@/components/footer', () => ({
-	default: () => <div>Mock Footer</div>
-}));
-// Define a type for the breadcrumb items used in the mock
-interface MockBreadcrumbItem {
-	label: string;
-	href?: string; // Optional href if needed
-}
-vi.mock('@/components/breadcrumb', () => ({
-	default: ({ items }: { items: MockBreadcrumbItem[] }) => (
-		<nav>Mock Breadcrumb: {items.map((item) => item.label).join(' > ')}</nav>
-	)
-}));
-
-// Mock next/navigation - Keep the actual import above for vi.mocked typing
+// Mock next/navigation
 vi.mock('next/navigation', () => ({
-	// Mock only the functions needed by the component under test
 	notFound: vi.fn(() => {
-		throw new Error('Test Not Found');
+		// Throw an error to simulate stopping render and allow catching in tests
+		throw new Error('Mocked notFound called');
 	})
-	// Add mocks for other navigation functions if they were used (e.g., useRouter, usePathname)
 }));
 
-// Define a local type for the props expected by the component in this test context
-// Import the actual Props type from the component file
-import { type Props as PageProps } from './page';
+// Helper to mock console warning/error to avoid cluttering test output
+vi.spyOn(console, 'warn').mockImplementation(() => {});
+vi.spyOn(console, 'error').mockImplementation(() => {});
 
-// Use the imported Props type or a compatible one for testing
-// If PageProps is exactly what we need, we can use it directly.
-// If we need a slightly different shape for testing, define a specific test type.
-// Here, PageProps seems suitable.
+// --- Test Data ---
+const MOCK_ABOUT_PAGE = {
+	slug: 'about',
+	frontmatter: {
+		title: 'About Me',
+		description: 'A little bit about the author.'
+		// Add other frontmatter fields if your component uses them
+	},
+	content: '# About Me\n\nThis is the content of the about page.'
+};
 
-describe('Dynamic Page ([page]/page.tsx)', () => {
-	// Cast the mock function to the correct type for TypeScript
-	const mockedGetMarkdownPageBySlug = vi.mocked(getMarkdownPageBySlug);
+const MOCK_USES_PAGE = {
+	slug: 'uses',
+	frontmatter: {
+		title: 'Uses',
+		description: 'Hardware and software I use.'
+	},
+	content: '# Uses\n\nDetails about my setup.'
+};
 
+const MOCK_ALL_PAGES = [MOCK_ABOUT_PAGE, MOCK_USES_PAGE];
+
+describe('Page Component - /app/[page]/page.tsx', () => {
 	beforeEach(() => {
 		// Reset mocks before each test
-		mockedGetMarkdownPageBySlug.mockReset();
-		vi.mocked(notFound).mockClear(); // Clear notFound mock calls
+		vi.clearAllMocks();
+		// Setup default mocks for successful cases, can be overridden in specific tests
+		vi.mocked(getMarkdownPageBySlug).mockResolvedValue(MOCK_ABOUT_PAGE); // Default to resolving 'about'
+		vi.mocked(getAllMarkdownPages).mockReturnValue(MOCK_ALL_PAGES);
 	});
 
-	it.todo('renders the page title and content when data is found', async () => {
-		// Setup mock return value for 'about' slug
-		const mockPageData = {
-			slug: 'about',
-			frontmatter: {
-				title: 'Mock About Title',
-				description: 'Mock description'
-			},
-			content: 'This is the mock about page content.'
-		};
-		mockedGetMarkdownPageBySlug.mockResolvedValue(mockPageData); // Use mockResolvedValue for async simulation
+	it('should render the page content correctly when found', async () => {
+		const slug = 'about';
+		vi.mocked(getMarkdownPageBySlug).mockResolvedValue(MOCK_ABOUT_PAGE); // Explicitly set for this test
 
-		// Render the component for the 'about' page
-		// Provide props matching the PageProps type (wrapped in Promises)
-		const props: PageProps = {
-			params: Promise.resolve({ page: 'about' }),
-			searchParams: Promise.resolve({})
-		};
-		// Render is async for async components
-		// Resolve the async component before rendering
-		// Render the async component directly using JSX
-		// No need to cast anymore, props match the expected type
-		render(<Page {...props} />);
+		// Render the async component
+		const PagePromise = Page({ params: Promise.resolve({ page: slug }), searchParams: Promise.resolve({}) });
+		render(await PagePromise);
 
-		// Wait for the heading based on the mocked title to appear
-		const heading = await screen.findByRole('heading', {
-			name: /mock about title/i
+		// Check Title (H1) - Scope the search within the article to distinguish from markdown H1
+		      const article = screen.getByRole('article');
+		// Use getAllByRole and check the first element, as both the page title H1
+		      // and the markdown H1 are within the article
+		const headings = within(article).getAllByRole('heading', { level: 1, name: MOCK_ABOUT_PAGE.frontmatter.title });
+		expect(headings[0]).toBeInTheDocument(); // Check the first H1 found (the page title)
+
+		// Check Breadcrumb
+		expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/');
+		expect(screen.getByRole('link', { name: MOCK_ABOUT_PAGE.frontmatter.title })).toHaveAttribute(
+			'href',
+			`/${slug}`
+		);
+
+		// Check some content snippet (ReactMarkdown renders the content)
+		expect(screen.getByText('This is the content of the about page.')).toBeInTheDocument();
+
+		// Check Header and Footer are present (assuming they have identifiable roles or text)
+		expect(screen.getByRole('banner')).toBeInTheDocument(); // Assuming Header has role="banner"
+		expect(screen.getByRole('contentinfo')).toBeInTheDocument(); // Assuming Footer has role="contentinfo"
+
+		// Ensure notFound was NOT called
+		expect(notFound).not.toHaveBeenCalled();
+	});
+
+	it('should call notFound if page data is not found', async () => {
+		const slug = 'non-existent-page';
+		vi.mocked(getMarkdownPageBySlug).mockResolvedValue(null); // Simulate page not found
+
+		// Expect the component promise to reject because notFound throws
+		await expect(
+			Page({ params: Promise.resolve({ page: slug }), searchParams: Promise.resolve({}) })
+		).rejects.toThrow('Mocked notFound called');
+
+		// Verify notFound was called
+		expect(notFound).toHaveBeenCalledTimes(1);
+	});
+
+    it('should use capitalized slug as title if frontmatter title is missing', async () => {
+        const slug = 'missing-title';
+        const mockPageWithoutTitle = {
+            slug: slug,
+            frontmatter: {
+                title: '', // Use empty string to test fallback, satisfying the type
+                description: 'Test description'
+            },
+            content: 'Page content here'
+        };
+        vi.mocked(getMarkdownPageBySlug).mockResolvedValue(mockPageWithoutTitle);
+
+        const PagePromise = Page({ params: Promise.resolve({ page: slug }), searchParams: Promise.resolve({}) });
+        render(await PagePromise);
+
+        // Expect H1 to be the capitalized slug
+        expect(screen.getByRole('heading', { level: 1, name: 'Missing-title' })).toBeInTheDocument();
+        // Expect breadcrumb to also use capitalized slug
+        expect(screen.getByRole('link', { name: 'Missing-title' })).toHaveAttribute('href', `/${slug}`);
+    });
+});
+
+describe('generateMetadata - /app/[page]/page.tsx', () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+		vi.mocked(getMarkdownPageBySlug).mockReturnValue(MOCK_ABOUT_PAGE); // Use sync mock for sync function
+	});
+
+	it('should generate correct metadata for an existing page', async () => {
+		const slug = 'about';
+		vi.mocked(getMarkdownPageBySlug).mockReturnValue(MOCK_ABOUT_PAGE);
+
+		const metadata = await generateMetadata({ params: Promise.resolve({ page: slug }), searchParams: Promise.resolve({}) });
+
+		expect(metadata).toEqual({
+			title: MOCK_ABOUT_PAGE.frontmatter.title,
+			description: MOCK_ABOUT_PAGE.frontmatter.description
 		});
-		expect(heading).toBeInTheDocument();
-
-		// Check if mock content is present (use findByText for consistency with async nature)
-		expect(await screen.findByText(/this is the mock about page content/i)).toBeInTheDocument();
-
-		// Check if breadcrumb is rendered with correct data (use findByText)
-		expect(
-			await screen.findByText(/Mock Breadcrumb: Home > Mock About Title/i)
-		).toBeInTheDocument();
-
-		// Ensure the mock function was called correctly
-		expect(mockedGetMarkdownPageBySlug).toHaveBeenCalledWith('about');
+		expect(getMarkdownPageBySlug).toHaveBeenCalledWith(slug);
 	});
 
-	it('calls notFound() when page data is not found', async () => {
-		// Setup mock to return null (page not found)
-		mockedGetMarkdownPageBySlug.mockReturnValue(null);
+	it('should generate "Page Not Found" metadata if page data is not found', async () => {
+		const slug = 'non-existent-page';
+		vi.mocked(getMarkdownPageBySlug).mockReturnValue(null); // Simulate page not found
 
-		// Expect the notFound function (mocked to throw) to be called
-		// Use waitFor to handle the async nature and potential state updates before notFound is called
-		const props: PageProps = {
-			params: Promise.resolve({ page: 'nonexistent' }),
-			searchParams: Promise.resolve({})
-		};
-		// Render the component, it might complete even if notFound is called internally
-		render(<Page {...props} />); // render is sync
+		const metadata = await generateMetadata({ params: Promise.resolve({ page: slug }), searchParams: Promise.resolve({}) });
 
-		// Assert that notFound was called after rendering and async operations
-		// Use waitFor to ensure we wait for the possibility of notFound being called asynchronously
-		await waitFor(() => {
-			// This assertion is now inside the waitFor block above
+		expect(metadata).toEqual({
+			title: 'Page Not Found'
 		});
-
-		expect(mockedGetMarkdownPageBySlug).toHaveBeenCalledWith('nonexistent');
-		expect(vi.mocked(notFound)).toHaveBeenCalledTimes(1);
+		expect(getMarkdownPageBySlug).toHaveBeenCalledWith(slug);
 	});
 
-	// Add more tests as needed, e.g., for different slugs, missing frontmatter fields, etc.
+    it('should handle missing description in frontmatter', async () => {
+        const slug = 'no-description';
+        const mockPageWithoutDesc = {
+            slug: slug,
+            frontmatter: {
+                title: 'No Description Page'
+                // description is missing
+            },
+            content: 'Content...'
+        };
+        vi.mocked(getMarkdownPageBySlug).mockReturnValue(mockPageWithoutDesc);
+
+        const metadata = await generateMetadata({ params: Promise.resolve({ page: slug }), searchParams: Promise.resolve({}) });
+
+        expect(metadata).toEqual({
+            title: 'No Description Page',
+            description: '' // Expect empty string as fallback
+        });
+    });
+});
+
+describe('generateStaticParams - /app/[page]/page.tsx', () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+		vi.mocked(getAllMarkdownPages).mockReturnValue(MOCK_ALL_PAGES);
+	});
+
+	it('should generate static params based on all markdown pages', async () => {
+		const staticParams = await generateStaticParams();
+
+		expect(staticParams).toEqual([
+			{ page: MOCK_ABOUT_PAGE.slug },
+			{ page: MOCK_USES_PAGE.slug }
+		]);
+		expect(getAllMarkdownPages).toHaveBeenCalledTimes(1);
+	});
+
+	it('should return an empty array if there are no markdown pages', async () => {
+		vi.mocked(getAllMarkdownPages).mockReturnValue([]); // Simulate no pages
+
+		const staticParams = await generateStaticParams();
+
+		expect(staticParams).toEqual([]);
+		expect(getAllMarkdownPages).toHaveBeenCalledTimes(1);
+	});
 });

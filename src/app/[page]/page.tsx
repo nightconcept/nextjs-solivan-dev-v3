@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
-import { Metadata } from 'next'; // Removed unused ResolvingMetadata
-import { getAllMarkdownPages, getMarkdownPageBySlug } from '@/lib/content'; // Import new functions
+import { Metadata } from 'next';
+import { getAllMarkdownPages, getMarkdownPageBySlug } from '@/lib/content';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import Breadcrumb from '@/components/breadcrumb';
@@ -31,7 +31,6 @@ export async function generateMetadata(
 		};
 	}
 
-	// Dynamically generate metadata using the page's frontmatter.
 	return {
 		title: pageData.frontmatter.title,
 		description: pageData.frontmatter.description || ''
