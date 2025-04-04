@@ -17,13 +17,11 @@ export default defineConfig({
 			'**/.{idea,git,cache,output,temp}/**',
 			'**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*',
 			'**/*.spec.ts' // Exclude Playwright tests
-		] // <-- Added comma here
+		]
 	},
 	resolve: {
-		// <-- Moved resolve block here
 		alias: {
 			'@': path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'src') // Point alias to src directory
 		}
-		// },
 	}
 });

@@ -11,7 +11,8 @@
 		"format": "prettier --write .",
 		"test:unit": "vitest",
 		"test": "pnpm run test:unit -- --run && pnpm run test:e2e",
-		"test:e2e": "playwright test"
+		"test:e2e": "playwright test",
+		"prepare": "husky"
 	},
 	"dependencies": {
 		"@radix-ui/react-dialog": "^1.1.4",
@@ -54,12 +55,17 @@
 		"eslint": "^9.23.0",
 		"eslint-config-next": "15.2.4",
 		"eslint-config-prettier": "^10.1.1",
+		"husky": "^9.1.7",
 		"jsdom": "^26.0.0",
+		"lint-staged": "^15.5.0",
 		"postcss": "^8",
 		"prettier": "^3.5.3",
 		"prettier-plugin-tailwindcss": "^0.6.11",
 		"tailwindcss": "^4.1.2",
 		"typescript": "^5",
 		"vitest": "^3.1.1"
+	},
+	"lint-staged": {
+		"*": "pnpm format"
 	}
 }

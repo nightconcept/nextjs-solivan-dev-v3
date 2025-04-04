@@ -22,7 +22,8 @@ vi.doMock('path', async () => {
 		...actual,
 		join: vi.fn((...args: string[]) => {
 			// Check if this is the specific call defining contentDirectory in lib/content.ts
-			if (args.length === 2 && args[0] === MOCK_CWD && args[1] === 'src/content') { // Check for 'src/content'
+			if (args.length === 2 && args[0] === MOCK_CWD && args[1] === 'src/content') {
+				// Check for 'src/content'
 				return MOCK_CONTENT_DIR; // Return our mock path
 			}
 			// Use actual join for other calls
