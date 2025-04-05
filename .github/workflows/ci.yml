@@ -45,8 +45,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x # Or specify a specific Deno version
+
       - name: Check Formatting
         run: pnpm run format --check
+
+      - name: Run Linter
+        run: pnpm run lint # This now runs 'deno lint'
 
       - name: Run Unit Tests
         run: pnpm run test:unit --run
