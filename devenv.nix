@@ -1,6 +1,10 @@
-{ pkgs, lib, config, inputs, ... }:
-
 {
+  pkgs,
+  lib,
+  config,
+  inputs,
+  ...
+}: {
   languages.javascript = {
     enable = true;
     package = pkgs.nodejs_22;
@@ -9,4 +13,6 @@
       install.enable = true;
     };
   };
+
+  packages = [pkgs.deno];
 }
