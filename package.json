@@ -68,6 +68,6 @@
     "vitest": "^3.1.1"
   },
   "lint-staged": {
-    "*": "pnpm format"
+    "*": "pnpm format && pnpm lint"
   }
 }
